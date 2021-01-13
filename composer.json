@@ -1,0 +1,27 @@
+{
+  "name": "lucao/mvc",
+  "require": {
+    "php": ">=7.0",
+    "mikehaertl/phpwkhtmltopdf": "^2.3",
+    "dompdf/dompdf": "^0.8.3",
+    "tecnickcom/tcpdf": "^6.2"
+  },
+  "authors": [
+    {
+      "name": "Lucas Antunes",
+      "email": "lucas.antunes355@gmail.com"
+    }
+  ],
+  "description": "MVC Padrão do Lucão",
+  "autoload": {
+    "psr-4": {
+      "Core\\": "Core/",
+      "Controllers\\": "Controllers/",
+      "Models\\": "Models/"
+    },
+    "files": [
+      "static/helpers.php",
+      "static/config.php"
+    ]
+  }
+}
