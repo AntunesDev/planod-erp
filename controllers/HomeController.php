@@ -11,11 +11,12 @@ class HomeController extends Core\Controller
     {
         parent::__construct();
         $this->controller_name = str_replace("Controller", "", basename(__FILE__, '.php'));
+        $this->page_name = "Início";
         $this->isLoggedIn();
     }
 
     public function index()
     {
-        $this->loadTemplate('home/home', []);
+        $this->loadTemplate('home/index', []);
     }
 }
