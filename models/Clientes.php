@@ -24,6 +24,17 @@ class Clientes extends Core\Model
             ->execute();
     }
 
+    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    {
+        return $this->select("identificador", "nome", "telefone", "email")
+            ->from($this->table_name)
+            ->whereLike("identificador", $searchText)
+            ->whereLike("nome", $searchText)
+            ->orderBy($orderColumn, $orderDir)
+            ->limit($start, $rows)
+            ->execute();
+    }
+
     public function selectById($identificador)
     {
         return $this->select("identificador", "nome", "telefone", "email")

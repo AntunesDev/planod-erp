@@ -51,6 +51,7 @@ function DataTableClass(tableName, endPoint, args) {
         next: "Próximo",
         previous: "Anterior",
       },
+      search: "",
     },
   };
 

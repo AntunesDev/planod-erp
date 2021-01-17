@@ -26,24 +26,24 @@ class Error
             echo "<p>Stack trace:<pre>" . $exception->getTraceAsString() . "</pre></p>";
             echo "<p>Thrown in '" . $exception->getFile() . "' on line " . $exception->getLine() . "</p>";
             echo "</pre>";
-        } else {
-            $dir = dirname(__DIR__) . '/logs/';
-            if (!is_dir($dir)) {
-                mkdir('logs');
-            }
-            $log = $dir . date('Y-m-d') . '.txt';
-            ini_set('error_log', $log);
-
-            $message = "Uncaught exception: '" . get_class($exception) . "'";
-            $message .= " with message '" . $exception->getMessage() . "'";
-            $message .= "\nStack trace: " . $exception->getTraceAsString();
-            $message .= "\nThrown in '" . $exception->getFile() . "' on line " . $exception->getLine();
-            $message .= PHP_EOL;
-
-            error_log($message);
-
-            echo json_encode(Error::errorCodeMessage($code));
         }
+
+        $dir = dirname(__DIR__) . '/logs/';
+        if (!is_dir($dir)) {
+            mkdir('logs');
+        }
+        $log = $dir . date('Y-m-d') . '.txt';
+        ini_set('error_log', $log);
+
+        $message = "Uncaught exception: '" . get_class($exception) . "'";
+        $message .= " with message '" . $exception->getMessage() . "'";
+        $message .= "\nStack trace: " . $exception->getTraceAsString();
+        $message .= "\nThrown in '" . $exception->getFile() . "' on line " . $exception->getLine();
+        $message .= PHP_EOL;
+
+        error_log($message);
+
+        echo json_encode(Error::errorCodeMessage($code));
     }
 
     public static function errorCodeMessage($code)

@@ -21,8 +21,10 @@ class Model
 	private $select_fields = [];
 	private $join_conditions = [];
 	private $where_conditions = [];
+	private $where_like_conditions = [];
 	private $group_by_fields = [];
 	private $order_by_conditions = [];
+	private $limit_by_conditions = [];
 	private $params = [];
 
 	public function __construct()
@@ -64,8 +66,10 @@ class Model
 			"select_fields" => $this->select_fields,
 			"join_conditions" => $this->join_conditions,
 			"where_conditions" => $this->where_conditions,
+			"where_like_conditions" => $this->where_like_conditions,
 			"group_by_fields" => $this->group_by_fields,
 			"order_by_conditions" => $this->order_by_conditions,
+			"limit_by" => $this->limit_by_conditions,
 			"params" => $this->params
 		]);
 	}
@@ -79,8 +83,10 @@ class Model
 		$this->select_fields = [];
 		$this->join_conditions = [];
 		$this->where_conditions = [];
+		$this->where_like_conditions = [];
 		$this->group_by_fields = [];
 		$this->order_by_conditions = [];
+		$this->limit_by_conditions = [];
 		$this->params = [];
 	}
 
@@ -117,6 +123,14 @@ class Model
 	public function where(string $field, $value)
 	{
 		$this->where_conditions = array_merge($this->where_conditions, [$field => $value]);
+		return $this;
+	}
+
+	public function whereLike(string $field, $value)
+	{
+		if (strlen(trim($value)) > 0) {
+			$this->where_like_conditions = array_merge($this->where_like_conditions, [$field => $value]);
+		}
 		return $this;
 	}
 
@@ -162,6 +176,12 @@ class Model
 		return $this->select_table($table);
 	}
 
+	public function limit($start, $rows)
+	{
+		$this->limit_by_conditions = ["start" => $start, "rows" => $rows];
+		return $this;
+	}
+
 	private function add_param($value)
 	{
 		$this->params[] = $value;
@@ -195,12 +215,18 @@ class Model
 					break;
 			}
 
-			if (count($this->where_conditions) > 0) {
+			if (count($this->where_conditions) > 0 || count($this->where_like_conditions) > 0) {
 				$this->query .= "WHERE ";
 				foreach ($this->where_conditions as $field => $value) {
 					$where_conditions[] = "$field = ?";
 					$this->add_param($value);
 				}
+
+				foreach ($this->where_like_conditions as $field => $value) {
+					$where_conditions[] = "$field LIKE '%?%'";
+					$this->add_param($value);
+				}
+
 				$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
 			}
 		}
@@ -215,6 +241,10 @@ class Model
 				$order_by_conditions[] = "$field $orientation";
 			}
 			$this->query .= implode(", ", $order_by_conditions) . PHP_EOL;
+		}
+
+		if (count($this->limit_by_conditions) > 0) {
+			$this->query .= "LIMIT " . $this->limit_by_conditions["start"] . ", " . $this->limit_by_conditions["rows"];
 		}
 	}
 

@@ -26,15 +26,62 @@ class ClientesController extends Core\Controller
         extract($_REQUEST);
 
         $Clientes = new Clientes();
-        $result = $Clientes->create($nome, $telefone, $telefone);
+        $result = $Clientes->create($nome, $telefone, $email);
         $this->asJson(["success" => $result]);
     }
 
     public function selectAll()
     {
+        extract($_REQUEST);
+
+        $columns = array(
+            0 => 'identificador',
+            1 => 'nome',
+            2 => 'telefone',
+            3 => 'email'
+        );
+
+        $search = $search['value'];
+        $dir = $order[0]['dir'];
+        $order = $columns[$order[0]['column']];
+        $start = (int) $start;
+        $length = (int) $length;
+
         $Clientes = new CLientes();
-        $result = $Clientes->selectAll();
-        $this->asJson(["success" => true, "results" => $result]);
+        $selectAll = $Clientes->selectAll();
+        $paginatedSearch = $Clientes->paginatedSearch($search, $order, $dir, $start, $length);
+
+        $totalData = count($selectAll);
+
+        if (empty($search)) {
+            $totalFiltered = $totalData;
+        } else {
+            $totalFiltered = count($paginatedSearch);
+        }
+
+        $data = array();
+        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
+            $paginatedSearch = [(array) $paginatedSearch];
+        }
+
+        if ($paginatedSearch != false) {
+            foreach ($paginatedSearch as $outer_key => $array) {
+                $nestedData = array();
+                foreach ($array as $inner_key => $value) {
+                    if (!(int) $inner_key) {
+                        $nestedData[$inner_key] = $value;
+                    }
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $this->asJson([
+            "draw" => intval($draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "records" => $data
+        ]);
     }
 
     public function selectById()
