@@ -195,12 +195,14 @@ class Model
 					break;
 			}
 
-			$this->query .= "WHERE ";
-			foreach ($this->where_conditions as $field => $value) {
-				$where_conditions[] = "$field = ?";
-				$this->add_param($value);
+			if (count($this->where_conditions) > 0) {
+				$this->query .= "WHERE ";
+				foreach ($this->where_conditions as $field => $value) {
+					$where_conditions[] = "$field = ?";
+					$this->add_param($value);
+				}
+				$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
 			}
-			$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
 		}
 
 		if (count($this->group_by_fields) > 0) {
