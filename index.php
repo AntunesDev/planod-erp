@@ -7,7 +7,7 @@ date_default_timezone_set("America/Bahia");
 
 $base_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
 define('BASE_PATH', $base_path);
-define('BASE_URL', "http://" . $_SERVER['HTTP_HOST'] . "/" . @end(explode("\\", dirname(__FILE__))) . "/");
+define('BASE_URL', "http://" . $_SERVER['HTTP_HOST'] . "/" . @end(explode(DIRECTORY_SEPARATOR, dirname(__FILE__))) . "/");
 
 /**
  * Composer
