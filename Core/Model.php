@@ -7,10 +7,10 @@ use Exception;
 
 class Model
 {
-	private const INSERT = 1;
-	private const SELECT = 2;
-	private const UPDATE = 3;
-	private const DELETE = 4;
+	const INSERT = 1;
+	const SELECT = 2;
+	const UPDATE = 3;
+	const DELETE = 4;
 
 	protected $db;
 	private $query = "";
