@@ -21,6 +21,19 @@ class Produtos extends Core\Model
     {
         return $this->select("identificador", "descricao", "preco_de_venda", "preco_de_compra")
             ->from($this->table_name)
+            ->where("excluido", 0)
+            ->execute();
+    }
+
+    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    {
+        return $this->select("identificador", "descricao", "preco_de_venda", "preco_de_compra")
+            ->from($this->table_name)
+            ->whereLike("identificador", $searchText)
+            ->whereLike("descricao", $searchText)
+            ->where("excluido", 0)
+            ->orderBy($orderColumn, $orderDir)
+            ->limit($start, $rows)
             ->execute();
     }
 
@@ -44,7 +57,8 @@ class Produtos extends Core\Model
 
     public function delete($identificador)
     {
-        return $this->deleteFrom($this->table_name)
+        return $this->update($this->table_name)
+            ->set("excluido", 1)
             ->where("identificador", $identificador)
             ->execute();
     }

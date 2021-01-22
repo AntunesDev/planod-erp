@@ -34,17 +34,23 @@
                 </div>
                 <div class="card-body">
                     <form id="form" onsubmit="return false;">
-                        <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required="true" placeholder="Nome">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="nome">Nome</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="nome" name="nome" required="true" placeholder="Nome">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="text" class="form-control" id="telefone" name="telefone" required="true" placeholder="Telefone">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="telefone">Telefone</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="telefone" name="telefone" required="true" placeholder="Telefone">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">E-mail de contato</label>
-                            <input type="email" class="form-control" id="email" name="email" required="true" placeholder="Email">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="email">E-mail de contato</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="email" name="email" required="true" placeholder="Email">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </form>
