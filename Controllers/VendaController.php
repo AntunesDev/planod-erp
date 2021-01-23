@@ -90,11 +90,13 @@ class VendaController extends Core\Controller
         $selectAll = $Venda->selectAll();
         $paginatedSearch = $Venda->paginatedSearch($search, $order, $dir, $start, $length);
 
-        foreach ($paginatedSearch as $index => $produto) {
-            if ($produto["valor_pago"] < $produto["valor_final"])
-                continue;
-            else
-                $indexesToKill[] = $index;
+        if ($paginatedSearch != false) {
+            foreach ($paginatedSearch as $index => $produto) {
+                if ($produto["valor_pago"] < $produto["valor_final"])
+                    continue;
+                else
+                    $indexesToKill[] = $index;
+            }
         }
 
         if (isset($indexesToKill)) {
@@ -104,7 +106,10 @@ class VendaController extends Core\Controller
             $paginatedSearch = array_values($paginatedSearch);
         }
 
-        $totalData = count($selectAll);
+        if ($selectAll == false)
+            $totalData = 0;
+        else
+            $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;

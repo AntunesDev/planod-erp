@@ -68,7 +68,10 @@ class ProdutosController extends Core\Controller
         $selectAll = $Produtos->selectAll();
         $paginatedSearch = $Produtos->paginatedSearch($search, $order, $dir, $start, $length);
 
-        $totalData = count($selectAll);
+        if ($selectAll == false)
+            $totalData = 0;
+        else
+            $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
@@ -124,12 +127,14 @@ class ProdutosController extends Core\Controller
             $paginatedSearch = [(array) $paginatedSearch];
         }
 
-        if (count($paginatedSearch) > 0 && $paginatedSearch != false) {
-            foreach ($paginatedSearch as $index => $produto) {
-                if ($produto["estoque"] <= 0)
-                    $indexesToKill[] = $index;
-                else
-                    continue;
+        if ($paginatedSearch != false) {
+            if (count($paginatedSearch) > 0) {
+                foreach ($paginatedSearch as $index => $produto) {
+                    if ($produto["estoque"] <= 0)
+                        $indexesToKill[] = $index;
+                    else
+                        continue;
+                }
             }
         }
 
@@ -149,7 +154,10 @@ class ProdutosController extends Core\Controller
             $paginatedSearch = array_values($paginatedSearch);
         }
 
-        $totalData = count($selectAll);
+        if ($selectAll == false)
+            $totalData = 0;
+        else
+            $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;

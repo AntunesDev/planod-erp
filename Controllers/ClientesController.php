@@ -58,7 +58,10 @@ class ClientesController extends Core\Controller
         $selectAll = $Clientes->selectAll();
         $paginatedSearch = $Clientes->paginatedSearch($search, $order, $dir, $start, $length);
 
-        $totalData = count($selectAll);
+        if ($selectAll == false)
+            $totalData = 0;
+        else
+            $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
