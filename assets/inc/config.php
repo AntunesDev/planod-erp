@@ -5,27 +5,27 @@ $template = [
         [
             'name'  => 'Clientes',
             'icon'  => 'fas fa-users',
-            'url'   => 'clientes'
+            'url'   => 'Clientes'
         ],
         [
             'name'  => 'Produtos',
             'icon'  => 'fas fa-coffee',
-            'url'   => 'produtos'
+            'url'   => 'Produtos'
         ],
         [
             'name'  => 'Estoque',
             'icon'  => 'fas fa-archive',
-            'url'   => 'estoque'
+            'url'   => 'Estoque'
         ],
         [
             'name'  => 'Movimentações',
             'icon'  => 'fas fa-history',
-            'url'   => 'historicoestoque'
+            'url'   => 'HistoricoEstoque'
         ],
         [
             'name'  => 'Vendas',
             'icon'  => 'fas fa-cart-arrow-down',
-            'url'   => 'venda'
+            'url'   => 'Venda'
         ],
         [
             'name'  => 'Relatórios',
