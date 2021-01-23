@@ -7,6 +7,7 @@ use Core;
 class Produtos extends Core\Model
 {
     private $table_name = "produtos";
+    private $table_estoque = "estoque";
 
     public function create($descricao, $preco_de_venda, $preco_de_compra)
     {
@@ -32,6 +33,30 @@ class Produtos extends Core\Model
             ->orWhereLike("identificador", $searchText)
             ->orWhereLike("descricao", $searchText)
             ->where("excluido", 0)
+            ->orderBy($orderColumn, $orderDir)
+            ->limit($start, $rows)
+            ->execute();
+    }
+
+    public function selectAllAtivosComEstoque()
+    {
+        return $this->select("identificador", "descricao", "quantidade", "preco_de_venda")
+            ->from($this->table_name)
+            ->leftJoin($this->table_estoque, "produto", "identificador")
+            ->where("excluido", 0)
+            ->whereNot("quantidade", 0)
+            ->execute();
+    }
+
+    public function paginatedSearchAtivosComEstoque($searchText, $orderColumn, $orderDir, $start, $rows)
+    {
+        return $this->select("identificador", "descricao AS produto", "quantidade AS estoque", "preco_de_venda AS preco")
+            ->from($this->table_name)
+            ->leftJoin($this->table_estoque, "produto", "identificador")
+            ->orWhereLike("identificador", $searchText)
+            ->orWhereLike("descricao", $searchText)
+            ->where("excluido", 0)
+            ->whereNot("quantidade", 0)
             ->orderBy($orderColumn, $orderDir)
             ->limit($start, $rows)
             ->execute();

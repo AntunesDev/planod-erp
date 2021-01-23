@@ -30,6 +30,13 @@ class ClientesController extends Core\Controller
         $this->asJson(["success" => $result]);
     }
 
+    public function listAll()
+    {
+        $Clientes = new Clientes();
+        $result = $Clientes->selectAll();
+        $this->asJson($result);
+    }
+
     public function selectAll()
     {
         extract($_REQUEST);

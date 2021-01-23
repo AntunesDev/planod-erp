@@ -101,6 +101,83 @@ class ProdutosController extends Core\Controller
         ]);
     }
 
+    public function selectAllAtivosComEstoque()
+    {
+        extract($_REQUEST);
+
+        $columns = array(
+            0 => 'descricao',
+            1 => 'quantidade',
+            2 => 'preco_de_venda'
+        );
+
+        $search = $search['value'];
+        $dir = $order[0]['dir'];
+        $order = $columns[$order[0]['column']];
+        $start = (int) $start;
+        $length = (int) $length;
+
+        $Produtos = new Produtos();
+        $selectAll = $Produtos->selectAllAtivosComEstoque();
+        $paginatedSearch = $Produtos->paginatedSearchAtivosComEstoque($search, $order, $dir, $start, $length);
+        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
+            $paginatedSearch = [(array) $paginatedSearch];
+        }
+
+        if (count($paginatedSearch) > 0 && $paginatedSearch != false) {
+            foreach ($paginatedSearch as $index => $produto) {
+                if ($produto["estoque"] <= 0)
+                    $indexesToKill[] = $index;
+                else
+                    continue;
+            }
+        }
+
+        if (isset($postData)) {
+            foreach ($paginatedSearch as $index => $produto) {
+                if (in_array($produto["identificador"], $postData) || $produto["estoque"] <= 0)
+                    $indexesToKill[] = $index;
+                else
+                    continue;
+            }
+        }
+
+        if (isset($indexesToKill)) {
+            foreach ($indexesToKill as $indexToKill) {
+                unset($paginatedSearch[$indexToKill]);
+            }
+            $paginatedSearch = array_values($paginatedSearch);
+        }
+
+        $totalData = count($selectAll);
+
+        if (empty($search)) {
+            $totalFiltered = $totalData;
+        } else {
+            $totalFiltered = count($paginatedSearch);
+        }
+
+        $data = array();
+        if ($paginatedSearch != false) {
+            foreach ($paginatedSearch as $outer_key => $array) {
+                $nestedData = array();
+                foreach ($array as $inner_key => $value) {
+                    if (!(int) $inner_key) {
+                        $nestedData[$inner_key] = $value;
+                    }
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $this->asJson([
+            "draw" => intval($draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "records" => $data
+        ]);
+    }
+
     public function selectById()
     {
         extract($_REQUEST);
