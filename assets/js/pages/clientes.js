@@ -21,7 +21,6 @@ $(document).ready(() => {
         render: (data, type, row) => {
           return `<center>
             <button type="button" class="btn btn-outline-warning mb-1 btnEditar" identificador=${data.identificador}>Editar</button>
-            <button type="button" class="btn btn-outline-danger mb-1 btnExcluir" identificador=${data.identificador}>Excluir</button>
           </center>`;
         },
       },

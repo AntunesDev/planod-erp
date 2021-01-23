@@ -27,5 +27,10 @@ $template = [
             'icon'  => 'fas fa-cart-arrow-down',
             'url'   => 'venda'
         ],
+        [
+            'name'  => 'Relatórios',
+            'icon'  => 'far fa-file-alt',
+            'url'   => 'Relatorios'
+        ]
     ]
 ];

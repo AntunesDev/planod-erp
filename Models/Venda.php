@@ -6,8 +6,10 @@ use Core;
 
 class Venda extends Core\Model
 {
-    private $table_name = "venda";
+    private $table_name     = "venda";
     private $table_clientes = "clientes";
+    private $table_itens    = "venda_itens";
+    private $table_produtos = "produtos";
 
     public function create($cliente, $data, $valor_total, $valor_desconto, $valor_final)
     {
@@ -71,6 +73,25 @@ class Venda extends Core\Model
     {
         return $this->deleteFrom($this->table_name)
             ->where("identificador", $identificador)
+            ->execute();
+    }
+
+    public function relatorioLucratividade($periodoInicio, $periodoFim)
+    {
+        return $this->select("venda_itens.produto", "produtos.descricao", "SUM(venda_itens.quantidade) AS quantidade_total", "venda_itens.valor_unitario", "produtos.preco_de_compra")
+            ->from($this->table_name)
+            ->leftJoin($this->table_itens, "venda_itens.venda", "venda.identificador")
+            ->leftJoin($this->table_produtos, "venda_itens.produto", "produtos.identificador")
+            ->whereBetween("venda.data", $periodoInicio, $periodoFim)
+            ->groupBy("venda_itens.produto", "produtos.descricao", "venda_itens.valor_unitario", "produtos.preco_de_compra")
+            ->execute();
+    }
+
+    public function getTotalDesconto($periodoInicio, $periodoFim)
+    {
+        return $this->select("SUM(venda.valor_desconto) AS valor_desconto")
+            ->from($this->table_name)
+            ->whereBetween("venda.data", $periodoInicio, $periodoFim)
             ->execute();
     }
 }

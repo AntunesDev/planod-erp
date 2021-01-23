@@ -21,6 +21,7 @@ class Model
 	private $select_fields = [];
 	private $join_conditions = [];
 	private $where_conditions = [];
+	private $where_between_conditions = [];
 	private $where_not_conditions = [];
 	private $where_like_conditions = [];
 	private $or_where_conditions = [];
@@ -69,6 +70,7 @@ class Model
 			"select_fields" => $this->select_fields,
 			"join_conditions" => $this->join_conditions,
 			"where_conditions" => $this->where_conditions,
+			"where_between_conditions" => $this->where_between_conditions,
 			"where_not_conditions" => $this->where_not_conditions,
 			"where_like_conditions" => $this->where_like_conditions,
 			"or_where_conditions" => $this->or_where_conditions,
@@ -89,6 +91,7 @@ class Model
 		$this->select_fields = [];
 		$this->join_conditions = [];
 		$this->where_conditions = [];
+		$this->where_between_conditions = [];
 		$this->where_not_conditions = [];
 		$this->where_like_conditions = [];
 		$this->or_where_conditions = [];
@@ -132,6 +135,12 @@ class Model
 	public function where(string $field, $value)
 	{
 		$this->where_conditions = array_merge($this->where_conditions, [$field => $value]);
+		return $this;
+	}
+
+	public function whereBetween(string $field, $value1, $value2)
+	{
+		$this->where_between_conditions = array_merge($this->where_between_conditions, [$field => [$value1, $value2]]);
 		return $this;
 	}
 
@@ -257,6 +266,7 @@ class Model
 
 			if (
 				count($this->where_conditions) > 0
+				|| count($this->where_between_conditions) > 0
 				|| count($this->where_like_conditions) > 0
 				|| count($this->or_where_conditions) > 0
 				|| count($this->or_where_like_conditions) > 0
@@ -275,6 +285,19 @@ class Model
 
 				if (isset($where_conditions)) {
 					$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
+					if (count($this->where_between_conditions) > 0 || count($this->where_not_conditions) > 0 || count($this->or_where_conditions) > 0 || count($this->or_where_like_conditions) > 0) {
+						$this->query .= "AND ";
+					}
+				}
+
+				foreach ($this->where_between_conditions as $field => $values) {
+					$where_between_conditions[] = "$field BETWEEN ? AND ?";
+					$this->add_param($values[0]);
+					$this->add_param($values[1]);
+				}
+
+				if (isset($where_between_conditions)) {
+					$this->query .= implode(" AND ", $where_between_conditions) . " " . PHP_EOL;
 					if (count($this->where_not_conditions) > 0 || count($this->or_where_conditions) > 0 || count($this->or_where_like_conditions) > 0) {
 						$this->query .= "AND ";
 					}
