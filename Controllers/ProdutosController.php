@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core;
+use Models\Estoque;
 use Models\Produtos;
 
 class ProdutosController extends Core\Controller
@@ -30,7 +31,19 @@ class ProdutosController extends Core\Controller
 
         $Produtos = new Produtos();
         $result = $Produtos->create($descricao, $preco_de_venda, $preco_de_compra);
+
+        if ($result != false) {
+            (new Estoque)->create($result, 0);
+        }
+
         $this->asJson(["success" => $result]);
+    }
+
+    public function listAll()
+    {
+        $Produtos = new Produtos();
+        $result = $Produtos->selectAll();
+        $this->asJson($result);
     }
 
     public function selectAll()

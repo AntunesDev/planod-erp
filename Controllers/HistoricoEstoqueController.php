@@ -3,6 +3,8 @@
 namespace Controllers;
 
 use Core;
+use DateTime;
+use Models\Estoque;
 use Models\HistoricoEstoque;
 
 class HistoricoEstoqueController extends Core\Controller
@@ -25,9 +27,27 @@ class HistoricoEstoqueController extends Core\Controller
     {
         extract($_REQUEST);
 
+        $Estoque = new Estoque();
+        $EstoqueE = $Estoque->selectByProduto($produto);
+
+        $quantidade_antes = $EstoqueE->quantidade;
+
+        if ($tipo_de_movimentacao == "Entrada") {
+            $quantidade_depois = $quantidade_antes + $quantidade_movimentada;
+        } else {
+            $quantidade_depois = $quantidade_antes - $quantidade_movimentada;
+        }
+
+        $momento = (new DateTime)->format("YmdHis");
+
         $HistoricoEstoque = new HistoricoEstoque();
         $result = $HistoricoEstoque->create($produto, $tipo_de_movimentacao, $quantidade_movimentada, $quantidade_antes, $quantidade_depois, $momento);
-        $this->asJson(["success" => $result]);
+
+        if ($result === "0") {
+            $Estoque->edit($produto, $quantidade_depois, $momento);
+        }
+
+        $this->asJson(["success" => $result === "0"]);
     }
 
     public function selectAll()

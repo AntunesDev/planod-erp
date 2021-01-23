@@ -7,6 +7,7 @@ use Core;
 class Estoque extends Core\Model
 {
     private $table_name = "estoque";
+    private $table_produtos = "produtos";
 
     public function create($produto, $quantidade)
     {
@@ -20,6 +21,19 @@ class Estoque extends Core\Model
     {
         return $this->select("produto", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
+            ->execute();
+    }
+
+    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    {
+        return $this->select("descricao AS produto", "quantidade", "ultima_movimentacao")
+            ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->whereLike("produto", $searchText)
+            ->whereLike("descricao", $searchText)
+            ->whereLike("ultima_movimentacao", $searchText)
+            ->orderBy($orderColumn, $orderDir)
+            ->limit($start, $rows)
             ->execute();
     }
 

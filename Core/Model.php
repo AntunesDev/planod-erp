@@ -110,8 +110,8 @@ class Model
 
 	public function join(string $table, string $field, $value, string $type = null)
 	{
-		$this->join_conditions[$table] = array_merge_recursive($this->join_conditions[$table] ?? [], ["fields" => [$field => $value], "type" => ($type != null ? " $type" : "")]);
-		array_splice($this->join_conditions[$table]["type"], 1);
+		$this->join_conditions[$table] = array_merge_recursive($this->join_conditions[$table] ?? [], ["fields" => [$field => $value], "type" => ($type != null ? "$type" : "")]);
+		$this->join_conditions[$table]["type"] = $type;
 		return $this;
 	}
 
@@ -215,6 +215,17 @@ class Model
 					break;
 			}
 
+			if (count($this->join_conditions) > 0) {
+				foreach ($this->join_conditions as $table => $param) {
+					$type = $param["type"];
+					$this->query .= "$type JOIN $table ON ";
+					foreach ($param["fields"] as $field => $value) {
+						$join_conditions[] = "$field = $value";
+					}
+					$this->query .= implode(" AND ", $join_conditions) . " " . PHP_EOL;
+				}
+			}
+
 			if (count($this->where_conditions) > 0 || count($this->where_like_conditions) > 0) {
 				$this->query .= "WHERE ";
 				foreach ($this->where_conditions as $field => $value) {
@@ -287,6 +298,14 @@ class Model
 					}
 					break;
 				case Model::INSERT:
+					if ($stmt->rowCount() > 0) {
+						$stmt = $this->db->prepare("SELECT LAST_INSERT_ID();");
+						$stmt->execute();
+						return $stmt->fetch(PDO::FETCH_ASSOC)["LAST_INSERT_ID()"];
+					} else {
+						return false;
+					}
+					break;
 				case Model::UPDATE:
 				case Model::DELETE;
 					return $stmt->rowCount() > 0;

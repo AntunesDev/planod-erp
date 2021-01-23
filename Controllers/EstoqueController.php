@@ -32,9 +32,55 @@ class EstoqueController extends Core\Controller
 
     public function selectAll()
     {
+        extract($_REQUEST);
+
+        $columns = array(
+            0 => 'produto',
+            1 => 'quantidade',
+            2 => 'ultima_movimentacao'
+        );
+
+        $search = $search['value'];
+        $dir = $order[0]['dir'];
+        $order = $columns[$order[0]['column']];
+        $start = (int) $start;
+        $length = (int) $length;
+
         $Estoque = new Estoque();
-        $result = $Estoque->selectAll();
-        $this->asJson(["success" => true, "results" => $result]);
+        $selectAll = $Estoque->selectAll();
+        $paginatedSearch = $Estoque->paginatedSearch($search, $order, $dir, $start, $length);
+
+        $totalData = count($selectAll);
+
+        if (empty($search)) {
+            $totalFiltered = $totalData;
+        } else {
+            $totalFiltered = count($paginatedSearch);
+        }
+
+        $data = array();
+        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
+            $paginatedSearch = [(array) $paginatedSearch];
+        }
+
+        if ($paginatedSearch != false) {
+            foreach ($paginatedSearch as $outer_key => $array) {
+                $nestedData = array();
+                foreach ($array as $inner_key => $value) {
+                    if (!(int) $inner_key) {
+                        $nestedData[$inner_key] = $value;
+                    }
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $this->asJson([
+            "draw" => intval($draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "records" => $data
+        ]);
     }
 
     public function selectByProduto()
