@@ -28,8 +28,8 @@ class Clientes extends Core\Model
     {
         return $this->select("identificador", "nome", "telefone", "email")
             ->from($this->table_name)
-            ->whereLike("identificador", $searchText)
-            ->whereLike("nome", $searchText)
+            ->orWhereLike("identificador", $searchText)
+            ->orWhereLike("nome", $searchText)
             ->orderBy($orderColumn, $orderDir)
             ->limit($start, $rows)
             ->execute();

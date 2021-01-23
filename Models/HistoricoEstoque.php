@@ -7,6 +7,7 @@ use Core;
 class HistoricoEstoque extends Core\Model
 {
     private $table_name = "historico_estoque";
+    private $table_produtos = "produtos";
 
     public function create($produto, $tipo_de_movimentacao, $quantidade_movimentada, $quantidade_antes, $quantidade_depois, $momento)
     {
@@ -27,11 +28,16 @@ class HistoricoEstoque extends Core\Model
             ->execute();
     }
 
-    public function selectByProduto($produto)
+    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
     {
-        return $this->select("produto", "tipo_de_movimentacao", "quantidade_movimentada", "quantidade_antes", "quantidade_depois", "momento")
+        return $this->select("descricao AS produto", "tipo_de_movimentacao", "quantidade_movimentada", "quantidade_antes", "quantidade_depois", "momento")
             ->from($this->table_name)
-            ->where("produto", $produto)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->orWhereLike("identificador", $searchText)
+            ->orWhereLike("descricao", $searchText)
+            ->orWhereLike("tipo_de_movimentacao", $searchText)
+            ->orderBy($orderColumn, $orderDir)
+            ->limit($start, $rows)
             ->execute();
     }
 

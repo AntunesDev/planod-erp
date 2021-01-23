@@ -29,9 +29,9 @@ class Estoque extends Core\Model
         return $this->select("descricao AS produto", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
             ->leftJoin($this->table_produtos, "identificador", "produto")
-            ->whereLike("produto", $searchText)
-            ->whereLike("descricao", $searchText)
-            ->whereLike("ultima_movimentacao", $searchText)
+            ->orWhereLike("produto", $searchText)
+            ->orWhereLike("descricao", $searchText)
+            ->orWhereLike("ultima_movimentacao", $searchText)
             ->orderBy($orderColumn, $orderDir)
             ->limit($start, $rows)
             ->execute();

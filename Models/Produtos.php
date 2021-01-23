@@ -29,8 +29,8 @@ class Produtos extends Core\Model
     {
         return $this->select("identificador", "descricao", "preco_de_venda", "preco_de_compra")
             ->from($this->table_name)
-            ->whereLike("identificador", $searchText)
-            ->whereLike("descricao", $searchText)
+            ->orWhereLike("identificador", $searchText)
+            ->orWhereLike("descricao", $searchText)
             ->where("excluido", 0)
             ->orderBy($orderColumn, $orderDir)
             ->limit($start, $rows)

@@ -52,18 +52,58 @@ class HistoricoEstoqueController extends Core\Controller
 
     public function selectAll()
     {
-        $HistoricoEstoque = new HistoricoEstoque();
-        $result = $HistoricoEstoque->selectAll();
-        $this->asJson(["success" => true, "results" => $result]);
-    }
-
-    public function selectByProduto()
-    {
         extract($_REQUEST);
 
+        $columns = array(
+            0 => 'descricao',
+            1 => 'tipo_de_movimentacao',
+            2 => 'quantidade_antes',
+            3 => 'quantidade_movimentada',
+            4 => 'quantidade_depois',
+            5 => 'momento'
+        );
+
+        $search = $search['value'];
+        $dir = $order[0]['dir'];
+        $order = $columns[$order[0]['column']];
+        $start = (int) $start;
+        $length = (int) $length;
+
         $HistoricoEstoque = new HistoricoEstoque();
-        $result = $HistoricoEstoque->selectByProduto($produto);
-        $this->asJson(["success" => true, "results" => $result]);
+        $selectAll = $HistoricoEstoque->selectAll();
+        $paginatedSearch = $HistoricoEstoque->paginatedSearch($search, $order, $dir, $start, $length);
+
+        $totalData = count($selectAll);
+
+        if (empty($search)) {
+            $totalFiltered = $totalData;
+        } else {
+            $totalFiltered = count($paginatedSearch);
+        }
+
+        $data = array();
+        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
+            $paginatedSearch = [(array) $paginatedSearch];
+        }
+
+        if ($paginatedSearch != false) {
+            foreach ($paginatedSearch as $outer_key => $array) {
+                $nestedData = array();
+                foreach ($array as $inner_key => $value) {
+                    if (!(int) $inner_key) {
+                        $nestedData[$inner_key] = $value;
+                    }
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $this->asJson([
+            "draw" => intval($draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "records" => $data
+        ]);
     }
 
     public function delete()

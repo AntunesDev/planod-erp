@@ -22,6 +22,8 @@ class Model
 	private $join_conditions = [];
 	private $where_conditions = [];
 	private $where_like_conditions = [];
+	private $or_where_conditions = [];
+	private $or_where_like_conditions = [];
 	private $group_by_fields = [];
 	private $order_by_conditions = [];
 	private $limit_by_conditions = [];
@@ -67,6 +69,8 @@ class Model
 			"join_conditions" => $this->join_conditions,
 			"where_conditions" => $this->where_conditions,
 			"where_like_conditions" => $this->where_like_conditions,
+			"or_where_conditions" => $this->or_where_conditions,
+			"or_where_like_conditions" => $this->or_where_like_conditions,
 			"group_by_fields" => $this->group_by_fields,
 			"order_by_conditions" => $this->order_by_conditions,
 			"limit_by" => $this->limit_by_conditions,
@@ -84,6 +88,8 @@ class Model
 		$this->join_conditions = [];
 		$this->where_conditions = [];
 		$this->where_like_conditions = [];
+		$this->or_where_conditions = [];
+		$this->or_where_like_conditions = [];
 		$this->group_by_fields = [];
 		$this->order_by_conditions = [];
 		$this->limit_by_conditions = [];
@@ -130,6 +136,20 @@ class Model
 	{
 		if (strlen(trim($value)) > 0) {
 			$this->where_like_conditions = array_merge($this->where_like_conditions, [$field => $value]);
+		}
+		return $this;
+	}
+
+	public function orWhere(string $field, $value)
+	{
+		$this->or_where_conditions = array_merge($this->or_where_conditions, [$field => $value]);
+		return $this;
+	}
+
+	public function orWhereLike(string $field, $value)
+	{
+		if (strlen(trim($value)) > 0) {
+			$this->or_where_like_conditions = array_merge($this->or_where_like_conditions, [$field => $value]);
 		}
 		return $this;
 	}
@@ -226,7 +246,7 @@ class Model
 				}
 			}
 
-			if (count($this->where_conditions) > 0 || count($this->where_like_conditions) > 0) {
+			if (count($this->where_conditions) > 0 || count($this->where_like_conditions) > 0 || count($this->or_where_conditions) > 0 || count($this->or_where_like_conditions) > 0) {
 				$this->query .= "WHERE ";
 				foreach ($this->where_conditions as $field => $value) {
 					$where_conditions[] = "$field = ?";
@@ -234,11 +254,30 @@ class Model
 				}
 
 				foreach ($this->where_like_conditions as $field => $value) {
-					$where_conditions[] = "$field LIKE '%?%'";
+					$where_conditions[] = "$field LIKE ?";
+					$this->add_param("%" . trim($value) . "%");
+				}
+
+				if (isset($where_conditions)) {
+					$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
+					if (count($this->or_where_conditions) > 0 || count($this->or_where_like_conditions) > 0) {
+						$this->query .= "AND ";
+					}
+				}
+
+				foreach ($this->or_where_conditions as $field => $value) {
+					$or_where_conditions[] = "$field = ?";
 					$this->add_param($value);
 				}
 
-				$this->query .= implode(" AND ", $where_conditions) . " " . PHP_EOL;
+				foreach ($this->or_where_like_conditions as $field => $value) {
+					$or_where_conditions[] = "$field LIKE ?";
+					$this->add_param("%" . trim($value) . "%");
+				}
+
+				if (isset($or_where_conditions)) {
+					$this->query .= implode(" OR ", $or_where_conditions) . " " . PHP_EOL;
+				}
 			}
 		}
 
@@ -283,10 +322,10 @@ class Model
 			}
 
 			$stmt->execute();
-
+			$operation = $this->operation;
 			$this->clearAuxiliaryVariables();
 
-			switch ($this->operation) {
+			switch ($operation) {
 				case Model::SELECT:
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					if (count($result) == 0) {
