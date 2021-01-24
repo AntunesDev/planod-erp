@@ -49,7 +49,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="email">E-mail de contato</label>
                             <div class="col-sm-9">
-                                <input type="email" class="form-control" id="email" name="email" required="true" placeholder="Email">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Enviar</button>
