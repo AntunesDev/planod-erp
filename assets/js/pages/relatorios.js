@@ -24,8 +24,7 @@ $(document).ready(() => {
             "error"
           );
         } else {
-          var w = window.open();
-          $(w.document.body).html(data);
+          printHTML(data);
         }
       });
   });
@@ -45,3 +44,16 @@ $(document).ready(() => {
     Swal.fire("Calma, cocada!", "Isso ainda não tá pronto.", "error");
   });
 });
+
+function printHTML(html) {
+  let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+  $(mywindow.document.body).html(html);
+  mywindow.document.close();
+  mywindow.focus();
+
+  mywindow.print();
+  mywindow.close();
+
+  return true;
+}
