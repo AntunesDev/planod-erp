@@ -32,7 +32,7 @@ class RelatoriosController extends Core\Controller
         $Venda = new Venda();
 
         $relatorioLucratividade = $Venda->relatorioLucratividade($periodoInicio, $periodoFim);
-        $totalDesconto = $Venda->getTotalDesconto($periodoInicio, $periodoFim)->valor_desconto ?? 0;
+        $totalDesconto = $Venda->getTotalDesconto($periodoInicio, $periodoFim)[0]["valor_desconto"] ?? [];
 
         $venda_total_final = 0;
         $custo_total_final = 0;
@@ -106,6 +106,7 @@ class RelatoriosController extends Core\Controller
         $venda_total_final_com_desconto = $venda_total_final - $totalDesconto;
 
         $lucro_total = $venda_total_final_com_desconto - $custo_total_final;
+        $dizimo = $lucro_total * 0.1;
         $margem_lucro_total = ($lucro_total * 100) / $custo_total_final;
 
         $relatorio .= "</tbody>
@@ -138,6 +139,10 @@ class RelatoriosController extends Core\Controller
                                 <tr>
                                     <th class='text-center'>Lucro Bruto Total</th>
                                     <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-center'>Dízimo</th>
+                                    <td class='text-center'>R$ " . number_format($dizimo, 2, ",", "") . "</td>
                                 </tr>
                             </tbody>
                         </table>

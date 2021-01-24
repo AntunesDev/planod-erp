@@ -28,9 +28,9 @@ class HistoricoEstoqueController extends Core\Controller
         extract($_REQUEST);
 
         $Estoque = new Estoque();
-        $EstoqueE = $Estoque->selectByProduto($produto);
+        $EstoqueE = $Estoque->selectByProduto($produto)[0] ?? [];
 
-        $quantidade_antes = $EstoqueE->quantidade;
+        $quantidade_antes = $EstoqueE["quantidade"];
 
         if ($tipo_de_movimentacao == "Entrada") {
             $quantidade_depois = $quantidade_antes + $quantidade_movimentada;

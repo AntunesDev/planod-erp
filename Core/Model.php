@@ -378,13 +378,7 @@ class Model
 			switch ($operation) {
 				case Model::SELECT:
 					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						return false;
-					} else if (count($result) == 1) {
-						return (object) $result[0];
-					} else {
-						return $result;
-					}
+					return $result;
 					break;
 				case Model::INSERT:
 					if ($stmt->rowCount() > 0) {

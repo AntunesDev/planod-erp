@@ -7,7 +7,7 @@
         </ol>
     </div>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold">Lucratividade</h6>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold">Movimentação de Estoque</h6>
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold">Custo de Estoque</h6>
@@ -73,7 +73,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold">Vendas por Cliente</h6>

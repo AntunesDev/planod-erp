@@ -46,9 +46,9 @@ class VendaController extends Core\Controller
                 $VendaItens->create($result, $produto, $quantidade, $valor_unitario);
 
                 $Estoque = new Estoque();
-                $EstoqueE = $Estoque->selectByProduto($item["produto"]);
+                $EstoqueE = $Estoque->selectByProduto($item["produto"])[0];
 
-                $quantidade_antes = $EstoqueE->quantidade;
+                $quantidade_antes = $EstoqueE["quantidade"];
                 $tipo_de_movimentacao = "Venda";
                 $quantidade_depois = $quantidade_antes - $quantidade;
 

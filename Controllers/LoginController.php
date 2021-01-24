@@ -22,16 +22,16 @@ class LoginController extends Core\Controller
         extract($_REQUEST);
 
         $Usuarios = new Models\Usuarios;
-        $usuario = $Usuarios->selectByUserName($login);
+        $usuario = $Usuarios->selectByUserName($login)[0] ?? [];
 
         if ($usuario == false) {
             $this->asJson(["success" => false, "message" => "Nome de usuário inválido!"]);
-        } else if (verifyPassword($password, $usuario->senha) == false) {
+        } else if (verifyPassword($password, $usuario["senha"]) == false) {
             $this->asJson(["success" => false, "message" => "Combinação usuário/senha inválida!"]);
-        } else if ($usuario->ativo == 0) {
+        } else if ($usuario["ativo"] == 0) {
             $this->asJson(["success" => false, "message" => "Seu usuário está desativado!"]);
         } else {
-            $_SESSION[SESSION_NAME]["usuario"] = (array) $usuario;
+            $_SESSION[SESSION_NAME]["usuario"] = $usuario;
             $this->asJson(["success" => true]);
         }
     }
