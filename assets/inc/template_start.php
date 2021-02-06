@@ -16,6 +16,33 @@
   <link href="assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-touchspin/css/jquery.bootstrap-touchspin.css" rel="stylesheet">
+  <style>
+    .custom-file-label,
+    .custom-file-input {
+      cursor: pointer;
+    }
+
+    .custom-file-label::after {
+      cursor: pointer;
+      color: #fff;
+      background-color: #6777ef;
+      border-color: #6777ef;
+      box-shadow: 0 .125rem .25rem 0 rgba(58, 59, 69, .2) !important;
+      border-radius: .25rem;
+      display: inline-block;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+    }
+
+    .disabled::after {
+      filter: grayscale(1);
+    }
+  </style>
 </head>
 
 <body id="page-top">

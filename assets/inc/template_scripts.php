@@ -14,7 +14,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
-
+<script>
+    const BASE_URL = "<?php echo BASE_URL; ?>"
+</script>
 <script>
     const controllerName = "<?php echo $this->page_name; ?>";
     const btnUpdateSenha = $('#btnUpdateSenha');

@@ -63,8 +63,27 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="imagem" class="col-sm-3 col-form-label">Imagem</label>
+                            <div class="col-sm-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="imagem" name="imagem">
+                                    <label class="custom-file-label">Selecionar arquivo</label>
+                                </div>
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </form>
+                    <div class="table-responsive p-3">
+                        <table class="table align-items-center table-flush table-hover" id="dataTableImagens">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center"><i class="fas fa-images"></i></th>
+                                    <th class="text-center"><i class="fas fa-bolt"></i></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,3 +93,11 @@
 <?php include BASE_PATH . 'assets/inc/template_scripts.php'; ?>
 <script src="assets/js/static/datatables.js"></script>
 <script src="assets/js/pages/produtos.js"></script>
+<style>
+    .square-thumb {
+        width: 150px;
+        height: 150px;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+</style>
