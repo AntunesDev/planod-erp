@@ -48,7 +48,7 @@ $(document).ready(() => {
 function printHTML(html) {
   let mywindow = window.open('localhost', 'PRINT', 'height=650,width=900,top=100,left=150');
 
-  $(mywindow.document.body).html(html);
+  mywindow.document.body.innerHTML = html;
   mywindow.document.close();
   mywindow.focus();
   mywindow.print();
