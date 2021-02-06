@@ -30,7 +30,7 @@ class ProdutosController extends Core\Controller
         $preco_de_compra = str_replace(",", ".", str_replace(".", "", $preco_de_compra));
         $preco_de_venda = str_replace(",", ".", str_replace(".", "", $preco_de_venda));
 
-        if (isset($_FILES["imagem"])) {
+        if (isset($_FILES["imagem"]) && strlen($_FILES["imagem"]["name"]) > 0) {
             $imagem = $_FILES["imagem"];
             $result = $this->fileUpload($imagem);
             if ($result != false) {
