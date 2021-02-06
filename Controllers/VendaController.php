@@ -169,7 +169,7 @@ class VendaController extends Core\Controller
         $Venda = new Venda();
         $VendaE = $Venda->selectById($identificador);
 
-        $result = $Venda->updateValorPago($identificador, ($VendaE->valor_pago + $valor_pago));
+        $result = $Venda->updateValorPago($identificador, ($VendaE[0]["valor_pago"] + $valor_pago));
 
         $this->asJson(["success" => $result]);
     }
