@@ -151,6 +151,6 @@ class RelatoriosController extends Core\Controller
             </body>
         </html>";
 
-        echo $relatorio;
+        file_put_contents(BASE_PATH . "views/relatorio.html", $relatorio);
     }
 }
