@@ -78,12 +78,12 @@ $(document).ready(() => {
             type: "hidden",
             id: "identificador",
             name: "identificador",
-            value: `${data.results.identificador}`,
+            value: `${data.results[0].identificador}`,
           })
         );
-        email.val(data.results.email);
-        nome.val(data.results.nome);
-        telefone.val(data.results.telefone);
+        email.val(data.results[0].email);
+        nome.val(data.results[0].nome);
+        telefone.val(data.results[0].telefone);
         tableCard.hide();
         formCard.show();
       }
