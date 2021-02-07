@@ -62,6 +62,12 @@ class RelatoriosController extends Core\Controller
                         <table class='table align-items-center table-flush'>
                             <thead class='thead-light'>
                                 <tr>
+                                    <th colspan='2' class='text-center'>DE</th>
+                                    <th colspan='2' class='text-center'>$start</th>
+                                    <th colspan='2' class='text-center'>ATÉ</th>
+                                    <th colspan='4' class='text-center'>$end</th>
+                                </tr>
+                                <tr>
                                     <th colspan='2'></th>
                                     <th colspan='2' class='text-center'>Unitário</th>
                                     <th colspan='4' class='text-center'>Total</th>
