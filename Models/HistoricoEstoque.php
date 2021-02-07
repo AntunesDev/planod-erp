@@ -25,6 +25,8 @@ class HistoricoEstoque extends Core\Model
     {
         return $this->select("produto", "tipo_de_movimentacao", "quantidade_movimentada", "quantidade_antes", "quantidade_depois", "momento")
             ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->where("excluido", 0)
             ->execute();
     }
 
@@ -33,6 +35,7 @@ class HistoricoEstoque extends Core\Model
         return $this->select("descricao AS produto", "tipo_de_movimentacao", "quantidade_movimentada", "quantidade_antes", "quantidade_depois", "momento")
             ->from($this->table_name)
             ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->where("excluido", 0)
             ->orWhereLike("identificador", $searchText)
             ->orWhereLike("descricao", $searchText)
             ->orWhereLike("tipo_de_movimentacao", $searchText)

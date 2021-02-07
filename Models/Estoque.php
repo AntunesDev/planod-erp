@@ -22,6 +22,7 @@ class Estoque extends Core\Model
         return $this->select("produto", "descricao", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
             ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->where("excluido", 0)
             ->execute();
     }
 
@@ -30,6 +31,7 @@ class Estoque extends Core\Model
         return $this->select("descricao AS produto", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
             ->leftJoin($this->table_produtos, "identificador", "produto")
+            ->where("excluido", 0)
             ->orWhereLike("produto", $searchText)
             ->orWhereLike("descricao", $searchText)
             ->orWhereLike("ultima_movimentacao", $searchText)
