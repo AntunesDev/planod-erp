@@ -132,8 +132,8 @@ $(document).ready(() => {
           })
         );
         descricao.val(data.results[0].descricao);
-        preco_de_venda.val(data.results[0].preco_de_venda);
-        preco_de_compra.val(data.results[0].preco_de_compra);
+        preco_de_venda.val(data.results[0].preco_de_venda.replace(".", ","));
+        preco_de_compra.val(data.results[0].preco_de_compra.replace(".", ","));
         $.applyDataMask("#preco_de_venda, #preco_de_compra");
         tableCard.hide();
         formCard.show();
