@@ -19,8 +19,9 @@ class Estoque extends Core\Model
 
     public function selectAll()
     {
-        return $this->select("produto", "quantidade", "ultima_movimentacao")
+        return $this->select("produto", "descricao", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
             ->execute();
     }
 

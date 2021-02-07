@@ -3,6 +3,10 @@
 namespace Controllers;
 
 use Core;
+use Models\Produtos;
+use Models\Venda;
+use Models\Clientes;
+use Models\Estoque;
 
 class HomeController extends Core\Controller
 {
@@ -18,5 +22,28 @@ class HomeController extends Core\Controller
     public function index()
     {
         $this->loadTemplate('home/index', []);
+    }
+
+    public function getIndexTotalizers()
+    {
+        $produtos = (new Produtos)->selectAll();
+        $vendas = (new Venda)->selectAll();
+        $clientes = (new Clientes)->selectAll();
+
+        $cobrancas = 0;
+        foreach ($vendas as $venda) {
+            if ($venda["valor_pago"] < $venda["valor_final"]) {
+                $cobrancas++;
+            }
+        }
+
+        $this->asJson(["produtos" => count($produtos), "vendas" => count($vendas), "cobrancas" => $cobrancas, "clientes" => count($clientes)]);
+    }
+
+    public function getLowStock()
+    {
+        $estoque = (new Estoque)->selectAll();
+
+        $this->asJson($estoque);
     }
 }
