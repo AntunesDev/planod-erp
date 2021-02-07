@@ -24,7 +24,7 @@ $(document).ready(() => {
             "error"
           );
         } else {
-          printHTML();
+          printHTML(data);
         }
       });
   });
@@ -45,6 +45,8 @@ $(document).ready(() => {
   });
 });
 
-function printHTML() {
-  window.open(BASE_URL + "views/relatorio.html", 'PRINT', 'height=650,width=900,top=100,left=150');
+function printHTML(htmlToPrint) {
+  window.document.write(htmlToPrint);
+  window.print();
+  location.reload();
 }
