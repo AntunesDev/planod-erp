@@ -15,17 +15,19 @@ $(document).ready(() => {
   axios.post("Home/getLowStock").then(({ data }) => {
     data.forEach((element) => {
       if (element.quantidade <= 10) {
+        let ultimaMovimentacao = new Date(
+          Date.parse(element.ultima_movimentacao)
+        ).toLocaleString("en-GB");
+
+        if (ultimaMovimentacao == "Invalid Date") {
+          ultimaMovimentacao = "Nada ainda";
+        }
+
         divEstoqueWarning.append(`
                 <div class="customer-message align-items-center">
                     <a class="font-weight-bold" href="#">
-                        <div class="text-truncate message-title">O produto '${
-                          element.descricao
-                        }' possui ${
-          element.quantidade
-        } unidade(s) em estoque!</div>
-                        <div class="small text-gray-500 message-time font-weight-bold">Última Movimentação: ${new Date(
-                          Date.parse(element.ultima_movimentacao)
-                        ).toLocaleString("en-GB")}</div >
+                        <div class="text-truncate message-title">O produto '${element.descricao}' possui ${element.quantidade} unidade(s) em estoque!</div>
+                        <div class="small text-gray-500 message-time font-weight-bold">Última Movimentação: ${ultimaMovimentacao}</div >
                     </a >
                 </div > `);
       }

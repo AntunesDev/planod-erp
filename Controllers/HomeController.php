@@ -44,6 +44,10 @@ class HomeController extends Core\Controller
     {
         $estoque = (new Estoque)->selectAll();
 
+        usort($estoque, function ($a, $b) {
+            return $a['quantidade'] > $b['quantidade'];
+        });
+
         $this->asJson($estoque);
     }
 }
