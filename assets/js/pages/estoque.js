@@ -1,4 +1,4 @@
-const newClientBtn = $("#newEstoqueBtn");
+const newEstoqueBtn = $("#newEstoqueBtn");
 const tableCard = $("#tableCard");
 const formCard = $("#formCard");
 const returnBtn = $("#returnBtn");
@@ -8,6 +8,25 @@ const tipo_de_movimentacao = $("#tipo_de_movimentacao");
 const quantidade_movimentada = $("#quantidade_movimentada");
 
 $(document).ready(() => {
+  produto.select2({
+    placeholder: 'Selecione uma opção',
+    ajax: {
+      url: "Produtos/searchByText/",
+      datatype: 'json',
+      data: (params) => {
+        var query = {
+          'searchText': params.term
+        }
+        return query;
+      },
+      processResults: (data) => {
+        var data = JSON.parse(data);
+        return {
+          results: data.results
+        }
+      }
+    }
+  });
   formCard.hide();
 
   let columns = {
@@ -26,25 +45,22 @@ $(document).ready(() => {
           }
         },
       },
+      {
+        data: null,
+        render: (data, type, row) => {
+          return `<center>
+            <button type="button" class="btn btn-warning mb-1 btnNovaMovimentacao" identificador=${data.identificador} produto="${data.produto}">Nova Movimentação</button>
+          </center>`;
+        },
+      },
     ],
-    aoColumnDefs: [{ bSortable: false, aTargets: [] }],
+    aoColumnDefs: [{ bSortable: false, aTargets: [3] }],
   };
 
   let dataTable = new DataTableClass("#dataTable", "Estoque/selectAll");
   dataTable.loadTable(columns);
 
-  axios.post("Produtos/listAll").then(({ data }) => {
-    data.forEach((prd) => {
-      produto.append(
-        $("<option></option>", {
-          text: prd.descricao,
-          value: prd.identificador,
-        })
-      );
-    });
-  });
-
-  newClientBtn.click(() => {
+  newEstoqueBtn.click(() => {
     tableCard.hide();
     formCard.show();
   });
@@ -68,4 +84,11 @@ $(document).ready(() => {
       }
     });
   });
+
+  $(document).on("click", ".btnNovaMovimentacao", (event) => {
+    let currentTarget = $(event.currentTarget);
+    produto.append(new Option(currentTarget.attr("produto"), currentTarget.attr("identificador"), false, true)).trigger('change');
+    tableCard.hide();
+    formCard.show();
+  })
 });

@@ -28,7 +28,7 @@ class Estoque extends Core\Model
 
     public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
     {
-        return $this->select("descricao AS produto", "quantidade", "ultima_movimentacao")
+        return $this->select("identificador", "descricao AS produto", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
             ->leftJoin($this->table_produtos, "identificador", "produto")
             ->where("excluido", 0)

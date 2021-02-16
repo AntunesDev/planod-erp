@@ -394,4 +394,14 @@ class ProdutosController extends Core\Controller
 
         $this->asJson(["success" => true, "results" => $result]);
     }
+
+    public function searchByText()
+    {
+        extract($_REQUEST);
+
+        $Produtos = new Produtos();
+        $result = $Produtos->searchByText($searchText ?? "%");
+
+        $this->asJson(["success" => true, "results" => $result]);
+    }
 }

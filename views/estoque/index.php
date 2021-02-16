@@ -20,6 +20,7 @@
                                     <th class="text-center">Produto</th>
                                     <th class="text-center">Quantidade</th>
                                     <th class="text-center">Última Movimentação</th>
+                                    <th class="text-center"><i class="fas fa-bolt"></i></th>
                                 </tr>
                             </thead>
                         </table>

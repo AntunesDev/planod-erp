@@ -26,6 +26,16 @@ class Produtos extends Core\Model
             ->execute();
     }
 
+    public function searchByText($searchText)
+    {
+        return $this->select("identificador AS id", "descricao AS text")
+            ->from($this->table_name)
+            ->where("excluido", 0)
+            ->whereLike("descricao", $searchText)
+            ->orderBy("descricao", "asc")
+            ->execute();
+    }
+
     public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
     {
         return $this->select("identificador", "descricao", "preco_de_venda", "preco_de_compra")
