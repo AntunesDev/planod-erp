@@ -7,6 +7,7 @@ use DateTime;
 use Models\Venda;
 use Models\HistoricoEstoque;
 use Models\Estoque;
+use Models\Produtos;
 
 class RelatoriosController extends Core\Controller
 {
@@ -323,6 +324,38 @@ class RelatoriosController extends Core\Controller
                                     <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
                                 </tr>
                             </tbody>
+                        </table>" . PRINT_END;
+
+        echo $relatorio;
+    }
+
+    public function catalogoSemImagens()
+    {
+        $Produtos = new Produtos();
+
+        $catalogoSemImagens = $Produtos->getCatalogoSemImagens();
+
+        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
+                            <thead class='thead-light'>
+                                <tr>
+                                    <th colspan='2' class='text-center'>Tabela válida para o dia " . (new DateTime())->format("d/m/Y") . " - Os preços podem mudar sem aviso prévio</th>
+                                </tr>
+                                <tr>
+                                    <th colspan='2' class='text-center'>Produtos com * podem não possuir estoque no momento</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+
+        foreach ($catalogoSemImagens as $line) {
+            extract($line);
+
+            $relatorio .= "<tr>
+                <td>$descricao" . ($quantidade <= 0 ? "*" : "") . "</td>
+                <td>R$ " . number_format($preco_de_venda, 2, ",", "") . "</td>
+            </tr>";
+        }
+
+        $relatorio .= "</tbody>
                         </table>" . PRINT_END;
 
         echo $relatorio;

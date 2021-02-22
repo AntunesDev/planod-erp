@@ -1,4 +1,5 @@
 const newProdutoBtn = $("#newProdutoBtn");
+const printTabelaBtn = $("#printTabelaBtn");
 const tableCard = $("#tableCard");
 const formCard = $("#formCard");
 const returnBtn = $("#returnBtn");
@@ -59,7 +60,7 @@ $(document).ready(() => {
         render: (data, type, row) => {
           return `<center>
             <img alt="${data.imagem}" src="${BASE_URL}/views/images/${data.imagem}" class="square-thumb">
-          </center>`
+          </center>`;
         },
       },
       {
@@ -82,6 +83,22 @@ $(document).ready(() => {
     formCard.show();
   });
 
+  printTabelaBtn.click(() => {
+    axios.post("Relatorios/catalogoSemImagens").then(({ data }) => {
+      if (data.success == false) {
+        Swal.fire(
+          "Oops...",
+          "Não existem informações o suficiente para emitir um relatório!",
+          "error"
+        );
+      } else {
+        window.document.write(data);
+        window.print();
+        location.reload();
+      }
+    });
+  });
+
   preco_de_venda.mask("#.##0,00", { reverse: true });
   preco_de_compra.mask("#.##0,00", { reverse: true });
 
@@ -99,12 +116,8 @@ $(document).ready(() => {
     }
 
     axios.post(endpoint, formData).then(({ data }) => {
-      if (data.success == false && typeof (data.message) !== 'undefined') {
-        Swal.fire(
-          "Oops...",
-          data.message,
-          "error"
-        );
+      if (data.success == false && typeof data.message !== "undefined") {
+        Swal.fire("Oops...", data.message, "error");
       } else if (data.success == false) {
         Swal.fire(
           "Oops...",
@@ -138,7 +151,11 @@ $(document).ready(() => {
         tableCard.hide();
         formCard.show();
 
-        let dataTableImagens = new DataTableClass("#dataTableImagens", "Produtos/selectAllImages", { "produto": identificador });
+        let dataTableImagens = new DataTableClass(
+          "#dataTableImagens",
+          "Produtos/selectAllImages",
+          { produto: identificador }
+        );
         dataTableImagens.loadTable(columnsImagens);
       }
     });
@@ -191,7 +208,7 @@ $(document).ready(() => {
         formData.append("nome", nome);
         axios.post("Produtos/deleteImagem", formData).then(({ data }) => {
           if (data.success == true) {
-            $('#dataTableImagens').DataTable().ajax.reload();
+            $("#dataTableImagens").DataTable().ajax.reload();
           } else {
             Swal.fire(
               "Oops...",
@@ -205,34 +222,39 @@ $(document).ready(() => {
   });
 });
 
-$(document).on('change', 'input[type="file"]', (event) => {
+$(document).on("change", 'input[type="file"]', (event) => {
   currentTarget = $(event.currentTarget);
   label = $(currentTarget.parent().children("label"));
 
   var fullPath = currentTarget.val();
   if (fullPath) {
-    var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+    var startIndex =
+      fullPath.indexOf("\\") >= 0
+        ? fullPath.lastIndexOf("\\")
+        : fullPath.lastIndexOf("/");
     var filename = fullPath.substring(startIndex);
-    if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+    if (filename.indexOf("\\") === 0 || filename.indexOf("/") === 0) {
       filename = filename.substring(1);
     }
 
     if (filename.endsWith("jpeg") || filename.endsWith("jpg")) {
       if (form.find("#identificador").length > 0) {
         let formData = new FormData();
-        formData.append("imagem", currentTarget[0].files[0])
-        formData.append("produto", form.find("#identificador").val())
-        axios.post("Produtos/addImage", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(({ data }) => {
-          if (data.success == false) {
-            Swal.fire("Oops...", data.message, "error");
-          } else {
-            $('#dataTableImagens').DataTable().ajax.reload();
-          }
-        })
+        formData.append("imagem", currentTarget[0].files[0]);
+        formData.append("produto", form.find("#identificador").val());
+        axios
+          .post("Produtos/addImage", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(({ data }) => {
+            if (data.success == false) {
+              Swal.fire("Oops...", data.message, "error");
+            } else {
+              $("#dataTableImagens").DataTable().ajax.reload();
+            }
+          });
       } else {
         label.text(filename);
         label.addClass("disabled");
@@ -242,4 +264,4 @@ $(document).on('change', 'input[type="file"]', (event) => {
       currentTarget.val("");
     }
   }
-})
+});

@@ -11,6 +11,7 @@
             <div class="card mb-4" id="tableCard">
                 <div class="card-header py-3 d-flex flex-row align-items-end justify-content-between">
                     <button type="button" class="btn btn-primary mb-1" id="newProdutoBtn">Novo Produto</button>
+                    <button type="button" class="btn btn-success mb-1" id="printTabelaBtn">Tabela de Produtos</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive p-3">

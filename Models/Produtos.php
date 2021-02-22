@@ -127,4 +127,25 @@ class Produtos extends Core\Model
             ->where("identificador", $identificador)
             ->execute();
     }
+
+    public function getCatalogoSemImagens()
+    {
+        $query = "SELECT
+            descricao,
+            preco_de_venda,
+            estoque.quantidade
+        FROM
+            produtos
+        LEFT JOIN estoque ON estoque.produto = produtos.identificador
+        WHERE
+            excluido = 0
+        ORDER BY
+            REPLACE (descricao, '	', '') ASC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
 }
