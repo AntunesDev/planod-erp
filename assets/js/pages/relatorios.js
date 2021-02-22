@@ -63,7 +63,19 @@ $(document).ready(() => {
 
   relVendasCliente.submit(() => {
     let formData = new FormData(relVendasCliente[0]);
-    Swal.fire("Calma, cocada!", "Isso ainda não tá pronto.", "error");
+    axios
+      .post("Relatorios/relatorioVendasPorCliente", formData)
+      .then(({ data }) => {
+        if (data.success == false) {
+          Swal.fire(
+            "Oops...",
+            "Não existem informações o suficiente para emitir um relatório!",
+            "error"
+          );
+        } else {
+          printHTML(data);
+        }
+      });
   });
 });
 

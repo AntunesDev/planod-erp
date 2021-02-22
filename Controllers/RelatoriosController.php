@@ -323,4 +323,111 @@ class RelatoriosController extends Core\Controller
 
         echo $relatorio;
     }
+
+    public function relatorioVendasPorCliente()
+    {
+        extract($_REQUEST);
+
+        $periodoInicio = DateTime::createFromFormat("d/m/Y", $start)->format("Ymd");
+        $periodoFim = DateTime::createFromFormat("d/m/Y", $end)->format("Ymd");
+
+        $Venda = new Venda();
+
+        $relatorioLucratividade = $Venda->relatorioVendasPorCliente($periodoInicio, $periodoFim);
+
+        $relatorio = "<!DOCTYPE html>
+        <head>
+          <meta charset='utf-8'>
+          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+          <meta name='description' content='PlanoD'>
+          <meta name='author' content='Lucão'>
+          <style>
+            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
+            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
+            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
+          </style>
+        </head>
+        <body id='page-top'>
+          <div id='wrapper'>
+            <div id='content-wrapper' class='d-flex flex-column'>
+              <div id='content'>
+                <div class='container-fluid' id='container-wrapper'>
+                  <div class='row'>
+                    <div class='col-lg-6'>
+                      <div class='card mb-4'><div class='table-responsive'>
+                        <table class='table align-items-center table-flush'>
+                            <thead class='thead-light'>
+                                <tr>
+                                    <th colspan='3' class='text-center'>DE $start</th>
+                                    <th colspan='3' class='text-center'>ATÉ $end</th>
+                                </tr>
+                                <tr>
+                                    <th class='text-center'>Cliente</th>
+                                    <th class='text-center'>Data</th>
+                                    <th class='text-center'>R$ Venda</th>
+                                    <th class='text-center'>R$ Custo</th>
+                                    <th class='text-center'>% de Lucro</th>
+                                    <th class='text-center'>Lucro Bruto</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+
+        $venda_total_final = 0;
+        $custo_total_final = 0;
+
+        foreach ($relatorioLucratividade as $line) {
+            extract($line);
+
+            $lucro_item = $valor_pago - $custo_total;
+            $margem_lucro_item = ($lucro_item * 100) / $custo_total;
+
+            $venda_total_final += $valor_pago;
+            $custo_total_final += $custo_total;
+
+            $relatorio .= "<tr>
+            <td>$nome</td>
+            <td>" . DateTime::createFromFormat("Y-m-d", $data)->format("d/m/Y") . "</td>
+            <td>R$ " . number_format($valor_pago, 2, ",", "") . "</td>
+            <td>R$ " . number_format($custo_total, 2, ",", "") . "</td>
+            <td>" . number_format($margem_lucro_item, 2, ".", "") . " %</td>
+            <td>R$ " . number_format($lucro_item, 2, ",", "") . "</td>
+            </tr>";
+        }
+
+        $lucro_total = $venda_total_final - $custo_total_final;
+        $margem_lucro_total = ($lucro_total * 100) / $custo_total_final;
+
+        $relatorio .= "</tbody>
+                        </table>
+                    </div>
+                    <hr>
+                    <div class='table-responsive'>
+                        <table class='table align-items-center table-flush'>
+                            <thead class='thead-light'>
+                                <tr>
+                                    <th class='text-center'>Total de Vendas</th>
+                                    <td class='text-center'>R$ " . number_format($venda_total_final, 2, ",", "") . "</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-center'>Total de Custo</th>
+                                    <td class='text-center'>R$ " . number_format($custo_total_final, 2, ",", "") . "</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-center'>% de Lucro Final</th>
+                                    <td class='text-center'>" . number_format($margem_lucro_total, 2, ".", "") . " %</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-center'>Lucro Bruto Total</th>
+                                    <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </body>
+        </html>";
+
+        echo $relatorio;
+    }
 }

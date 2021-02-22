@@ -117,4 +117,49 @@ class Venda extends Core\Model
             ->whereBetween("venda.data", $periodoInicio, $periodoFim)
             ->execute();
     }
+
+    public function relatorioVendasPorCliente($periodoInicio, $periodoFim)
+    {
+        $query = "SELECT
+            clientes.identificador,
+            nome,
+            SUM(main.valor_pago) AS valor_pago,
+            CAST(main.data AS DATE) AS data,
+            d.custo_total
+        FROM
+            venda AS main
+        LEFT JOIN clientes ON cliente = clientes.identificador
+        LEFT JOIN (
+            SELECT
+                a.data,
+                a.cliente,
+                SUM(
+                    b.quantidade * c.preco_de_compra
+                ) AS custo_total
+            FROM
+                venda AS a
+            LEFT JOIN venda_itens AS b ON b.venda = a.identificador
+            LEFT JOIN produtos AS c ON c.identificador = b.produto
+            GROUP BY
+                a.data,
+                a.cliente
+        ) AS d ON d.data = main.data
+        AND d.cliente = main.cliente
+        WHERE
+            main.valor_pago >= valor_final
+            AND main.data BETWEEN :periodoInicio AND :periodoFim
+        GROUP BY
+            clientes.identificador,
+            nome,
+            CAST(main.data AS DATE),
+            d.custo_total;";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":periodoInicio", $periodoInicio);
+        $stmt->bindParam(":periodoFim", $periodoFim);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
 }
