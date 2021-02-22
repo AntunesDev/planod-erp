@@ -42,7 +42,6 @@ class VendaController extends Core\Controller
 
             foreach ($items as $item) {
                 extract($item);
-                $valor_unitario = str_replace(",", ".", str_replace(".", "", $valor_unitario));
                 $VendaItens->create($result, $produto, $quantidade, $valor_unitario);
 
                 $Estoque = new Estoque();
