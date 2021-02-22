@@ -49,7 +49,12 @@ const columnsVendas = {
     {
       data: null,
       render: (data, type, row) => {
-        if (data.valor_pago >= data.valor_final) {
+        if (Number(data.valor_pago) >= Number(data.valor_final)) {
+          console.log(
+            `${Number(data.valor_pago)} >= ${Number(data.valor_final)} = ${
+              Number(data.valor_pago) >= Number(data.valor_final)
+            }`
+          );
           return `<center><b>Pagamento finalizado</b></center>`;
         } else {
           return `<center>
