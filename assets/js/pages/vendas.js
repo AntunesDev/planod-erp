@@ -125,6 +125,26 @@ const columnsProdutos = {
 };
 
 $(document).ready(() => {
+  cliente.select2({
+    placeholder: "Selecione uma opção",
+    ajax: {
+      url: "Clientes/searchByText/",
+      datatype: "json",
+      data: (params) => {
+        var query = {
+          searchText: params.term,
+        };
+        return query;
+      },
+      processResults: (data) => {
+        var data = JSON.parse(data);
+        return {
+          results: data.results,
+        };
+      },
+    },
+  });
+
   rowVenda.hide();
 
   valor_total.mask("##0,00", { reverse: true });

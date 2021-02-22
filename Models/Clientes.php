@@ -17,6 +17,15 @@ class Clientes extends Core\Model
             ->execute();
     }
 
+    public function searchByText($searchText)
+    {
+        return $this->select("identificador AS id", "nome AS text")
+            ->from($this->table_name)
+            ->whereLike("nome", $searchText)
+            ->orderBy("nome", "ASC")
+            ->execute();
+    }
+
     public function selectAll()
     {
         return $this->select("identificador", "nome", "telefone", "email")

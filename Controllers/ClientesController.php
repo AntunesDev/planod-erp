@@ -120,4 +120,14 @@ class ClientesController extends Core\Controller
         $result = $Clientes->delete($identificador);
         $this->asJson(["success" => true, "results" => $result]);
     }
+
+    public function searchByText()
+    {
+        extract($_REQUEST);
+
+        $Clientes = new Clientes();
+        $result = $Clientes->searchByText($searchText ?? "%");
+
+        $this->asJson(["success" => true, "results" => $result]);
+    }
 }
