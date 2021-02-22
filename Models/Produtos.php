@@ -3,6 +3,7 @@
 namespace Models;
 
 use Core;
+use PDO;
 
 class Produtos extends Core\Model
 {
@@ -48,28 +49,57 @@ class Produtos extends Core\Model
             ->execute();
     }
 
-    public function selectAllAtivosComEstoque()
+    public function selectAllAtivosComEstoque($produtosNoCarrinho)
     {
-        return $this->select("identificador", "descricao", "quantidade", "preco_de_venda")
-            ->from($this->table_name)
-            ->leftJoin($this->table_estoque, "produto", "identificador")
-            ->where("excluido", 0)
-            ->whereNot("quantidade", 0)
-            ->execute();
+        $query = "SELECT identificador, descricao, quantidade, preco_de_venda
+        FROM $this->table_name
+        LEFT JOIN $this->table_estoque ON produto = identificador
+        WHERE excluido = 0
+        AND quantidade != 0
+        ";
+
+        if (count($produtosNoCarrinho) > 0) {
+            $query .= "AND identificador NOT IN (" . implode(", ", $produtosNoCarrinho) . ")";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 
-    public function paginatedSearchAtivosComEstoque($searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearchAtivosComEstoque($produtosNoCarrinho, $searchText, $orderColumn, $orderDir, $start, $rows)
     {
-        return $this->select("identificador", "descricao AS produto", "quantidade AS estoque", "preco_de_venda AS preco")
-            ->from($this->table_name)
-            ->leftJoin($this->table_estoque, "produto", "identificador")
-            ->orWhereLike("identificador", $searchText)
-            ->orWhereLike("descricao", $searchText)
-            ->where("excluido", 0)
-            ->whereNot("quantidade", 0)
-            ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
-            ->execute();
+        $query = "SELECT identificador, descricao AS produto, quantidade AS estoque, preco_de_venda AS preco
+        FROM $this->table_name
+        LEFT JOIN $this->table_estoque ON produto = identificador
+        WHERE (
+            identificador LIKE :searchText
+            OR descricao LIKE :searchText
+        )
+        AND excluido = 0
+        AND quantidade != 0
+        ";
+
+        if (count($produtosNoCarrinho) > 0) {
+            $query .= "AND identificador NOT IN (" . implode(", ", $produtosNoCarrinho) . ")\n";
+        }
+
+        $query .= "ORDER BY $orderColumn $orderDir
+        LIMIT $start, $rows";
+
+        if (empty($searchText))
+            $searchText = '%';
+        else
+            $searchText = '%' . $searchText . '%';
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":searchText", $searchText);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 
     public function selectById($identificador)

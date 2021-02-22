@@ -62,20 +62,14 @@ class EstoqueController extends Core\Controller
         }
 
         $data = array();
-        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
-            $paginatedSearch = [(array) $paginatedSearch];
-        }
-
-        if ($paginatedSearch != false) {
-            foreach ($paginatedSearch as $outer_key => $array) {
-                $nestedData = array();
-                foreach ($array as $inner_key => $value) {
-                    if (!(int) $inner_key) {
-                        $nestedData[$inner_key] = $value;
-                    }
+        foreach ($paginatedSearch as $outer_key => $array) {
+            $nestedData = array();
+            foreach ($array as $inner_key => $value) {
+                if (!(int) $inner_key) {
+                    $nestedData[$inner_key] = $value;
                 }
-                $data[] = $nestedData;
             }
+            $data[] = $nestedData;
         }
 
         $this->asJson([

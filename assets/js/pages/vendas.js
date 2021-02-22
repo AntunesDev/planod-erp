@@ -260,76 +260,78 @@ function updateCarrinho() {
 
   let tbody = tableCarrinho.find("tbody");
 
-  if (typeof localStorage.carrinho != "undefined") {
-    carrinho = JSON.parse(localStorage.carrinho);
-  } else {
-    carrinho = {};
-  }
-
   tbody.html("");
-  if (typeof localStorage.carrinho != "undefined") {
-    tbody.append("<tr><th colspan=4 class='text-center'>Nada ainda!</th></tr>");
-  } else if (Object.keys(JSON.parse(localStorage.carrinho)).length == 0) {
+  let carrinho = localStorage.getItem("carrinho");
+  if (carrinho == null) {
     tbody.append("<tr><th colspan=4 class='text-center'>Nada ainda!</th></tr>");
   } else {
-    Object.keys(JSON.parse(localStorage.carrinho)).forEach((identificador) => {
-      let produto = carrinho[identificador];
+    carrinho = JSON.parse(carrinho);
+    if (Object.keys(carrinho).length == 0) {
+      tbody.append(
+        "<tr><th colspan=4 class='text-center'>Nada ainda!</th></tr>"
+      );
+    } else {
+      Object.keys(JSON.parse(localStorage.carrinho)).forEach(
+        (identificador) => {
+          let produto = carrinho[identificador];
 
-      tbody.append(`
-      <tr>
-        <td>${produto.produto}</td>
-        <td>R$ ${Number(produto.preco).toFixed(2)}</td>
-        <td><input type="text" class="upspin" identificador="${identificador}" valor='${
-        produto.preco
-      }' name='quantidade${identificador}' required="true"></td>
-        <td>R$ ${Number(produto.preco * produto.quantidade).toFixed(2)}</td>
-      </tr>
-      `);
+          tbody.append(`
+          <tr>
+            <td>${produto.produto}</td>
+            <td>R$ ${Number(produto.preco).toFixed(2)}</td>
+            <td><input type="text" class="upspin" identificador="${identificador}" valor='${
+            produto.preco
+          }' name='quantidade${identificador}' required="true"></td>
+            <td>R$ ${Number(produto.preco * produto.quantidade).toFixed(2)}</td>
+          </tr>
+          `);
 
-      valorTotal += produto.preco * produto.quantidade;
+          valorTotal += produto.preco * produto.quantidade;
 
-      $(`[name="quantidade${identificador}"]`).TouchSpin({
-        min: 0,
-        max: produto.estoque,
-        initval: produto.quantidade,
-      });
+          $(`[name="quantidade${identificador}"]`).TouchSpin({
+            min: 0,
+            max: produto.estoque,
+            initval: produto.quantidade,
+          });
 
-      $(document).off("touchspin.on.stopdownspin", `.upspin`);
-      $(document).on("touchspin.on.stopdownspin", `.upspin`, (event) => {
-        target = $(event.currentTarget);
+          $(document).off("touchspin.on.stopdownspin", `.upspin`);
+          $(document).on("touchspin.on.stopdownspin", `.upspin`, (event) => {
+            target = $(event.currentTarget);
 
-        if (typeof localStorage.carrinho != "undefined") {
-          carrinho = JSON.parse(localStorage.carrinho);
-        } else {
-          carrinho = {};
+            if (typeof localStorage.carrinho != "undefined") {
+              carrinho = JSON.parse(localStorage.carrinho);
+            } else {
+              carrinho = {};
+            }
+
+            if (target.val() == 0) {
+              delete carrinho[target.attr("identificador")];
+            } else {
+              carrinho[target.attr("identificador")].quantidade = target.val();
+            }
+
+            localStorage.carrinho = JSON.stringify(carrinho);
+            updateEstoque();
+            updateCarrinho();
+          });
+
+          $(document).off("touchspin.on.stopupspin", `.upspin`);
+          $(document).on("touchspin.on.stopupspin", `.upspin`, (event) => {
+            target = $(event.currentTarget);
+            if (typeof localStorage.carrinho != "undefined") {
+              carrinho = JSON.parse(localStorage.carrinho);
+            } else {
+              carrinho = {};
+            }
+
+            carrinho[target.attr("identificador")].quantidade = target.val();
+            localStorage.carrinho = JSON.stringify(carrinho);
+
+            updateCarrinho();
+          });
         }
-
-        if (target.val() == 0) {
-          delete carrinho[target.attr("identificador")];
-        } else {
-          carrinho[target.attr("identificador")].quantidade = target.val();
-        }
-
-        localStorage.carrinho = JSON.stringify(carrinho);
-        updateEstoque();
-        updateCarrinho();
-      });
-
-      $(document).off("touchspin.on.stopupspin", `.upspin`);
-      $(document).on("touchspin.on.stopupspin", `.upspin`, (event) => {
-        target = $(event.currentTarget);
-        if (typeof localStorage.carrinho != "undefined") {
-          carrinho = JSON.parse(localStorage.carrinho);
-        } else {
-          carrinho = {};
-        }
-
-        carrinho[target.attr("identificador")].quantidade = target.val();
-        localStorage.carrinho = JSON.stringify(carrinho);
-
-        updateCarrinho();
-      });
-    });
+      );
+    }
   }
 
   valor_total.val(valorTotal.toFixed(2).replace(".", ","));

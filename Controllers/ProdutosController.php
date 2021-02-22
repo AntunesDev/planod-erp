@@ -197,6 +197,7 @@ class ProdutosController extends Core\Controller
     public function selectAllAtivosComEstoque()
     {
         extract($_REQUEST);
+        $produtosNoCarrinho = $postData ?? [];
 
         $columns = array(
             0 => 'descricao',
@@ -211,38 +212,10 @@ class ProdutosController extends Core\Controller
         $length = (int) $length;
 
         $Produtos = new Produtos();
-        $selectAll = $Produtos->selectAllAtivosComEstoque();
-        $paginatedSearch = $Produtos->paginatedSearchAtivosComEstoque($search, $order, $dir, $start, $length);
+        $selectAll = $Produtos->selectAllAtivosComEstoque($produtosNoCarrinho);
+        $paginatedSearch = $Produtos->paginatedSearchAtivosComEstoque($produtosNoCarrinho, $search, $order, $dir, $start, $length);
 
-        if (count($paginatedSearch) > 0) {
-            foreach ($paginatedSearch as $index => $produto) {
-                if ($produto["estoque"] <= 0)
-                    $indexesToKill[] = $index;
-                else
-                    continue;
-            }
-        }
-
-        if (isset($postData)) {
-            foreach ($paginatedSearch as $index => $produto) {
-                if (in_array($produto["identificador"], $postData) || $produto["estoque"] <= 0)
-                    $indexesToKill[] = $index;
-                else
-                    continue;
-            }
-        }
-
-        if (isset($indexesToKill)) {
-            foreach ($indexesToKill as $indexToKill) {
-                unset($paginatedSearch[$indexToKill]);
-            }
-            $paginatedSearch = array_values($paginatedSearch);
-        }
-
-        if ($selectAll == false)
-            $totalData = 0;
-        else
-            $totalData = count($selectAll);
+        $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
