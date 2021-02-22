@@ -103,8 +103,8 @@ class Venda extends Core\Model
     {
         return $this->select("venda_itens.produto", "produtos.descricao", "SUM(venda_itens.quantidade) AS quantidade_total", "venda_itens.valor_unitario", "produtos.preco_de_compra")
             ->from($this->table_name)
-            ->leftJoin($this->table_itens, "venda_itens.venda", "venda.identificador")
-            ->leftJoin($this->table_produtos, "venda_itens.produto", "produtos.identificador")
+            ->join($this->table_itens, "venda_itens.venda", "venda.identificador")
+            ->join($this->table_produtos, "venda_itens.produto", "produtos.identificador")
             ->whereBetween("venda.data", $periodoInicio, $periodoFim)
             ->groupBy("venda_itens.produto", "produtos.descricao", "venda_itens.valor_unitario", "produtos.preco_de_compra")
             ->execute();

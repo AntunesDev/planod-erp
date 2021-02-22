@@ -39,28 +39,7 @@ class RelatoriosController extends Core\Controller
         $custo_total_final = 0;
         $quantidade_total_final = 0;
 
-        $relatorio = "<!DOCTYPE html>
-        <head>
-          <meta charset='utf-8'>
-          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-          <meta name='description' content='PlanoD'>
-          <meta name='author' content='Lucão'>
-          <style>
-            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
-          </style>
-        </head>
-        <body id='page-top'>
-          <div id='wrapper'>
-            <div id='content-wrapper' class='d-flex flex-column'>
-              <div id='content'>
-                <div class='container-fluid' id='container-wrapper'>
-                  <div class='row'>
-                    <div class='col-lg-6'>
-                      <div class='card mb-4'><div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
+        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
                             <thead class='thead-light'>
                                 <tr>
                                     <th colspan='2' class='text-center'>DE</th>
@@ -152,11 +131,7 @@ class RelatoriosController extends Core\Controller
                                     <td class='text-center'>R$ " . number_format($dizimo, 2, ",", "") . "</td>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </body>
-        </html>";
+                        </table>" . PRINT_END;
 
         echo $relatorio;
     }
@@ -172,29 +147,7 @@ class RelatoriosController extends Core\Controller
 
         $relatorioMovEstoque = $HistoricoEstoque->relatorioMovEstoque($periodoInicio, $periodoFim);
 
-        $relatorio = "<!DOCTYPE html>
-        <head>
-          <meta charset='utf-8'>
-          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-          <meta name='description' content='PlanoD'>
-          <meta name='author' content='Lucão'>
-          <style>
-            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
-          </style>
-        </head>
-        <body id='page-top'>
-          <div id='wrapper'>
-            <div id='content-wrapper' class='d-flex flex-column'>
-              <div id='content'>
-                <div class='container-fluid' id='container-wrapper'>
-                  <div class='row'>
-                    <div class='col-lg-6'>
-                      <div class='card mb-4'>
-                        <div class='table-responsive'>
-                            <table class='table align-items-center table-flush'>
+        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
                                 <thead class='thead-light'>
                                     <tr>
                                         <th class='text-center'>DE</th>
@@ -239,11 +192,7 @@ class RelatoriosController extends Core\Controller
         }
 
         $relatorio .= "</tbody>
-                        </table>
-                    </div>
-                </div>
-            </body>
-        </html>";
+                        </table>" . PRINT_END;
 
         echo $relatorio;
     }
@@ -256,29 +205,7 @@ class RelatoriosController extends Core\Controller
 
         $relatorioCustoEstoque = $Estoque->relatorioCustoEstoque($orderRelCustoEstoque);
 
-        $relatorio = "<!DOCTYPE html>
-        <head>
-          <meta charset='utf-8'>
-          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-          <meta name='description' content='PlanoD'>
-          <meta name='author' content='Lucão'>
-          <style>
-            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
-          </style>
-        </head>
-        <body id='page-top'>
-          <div id='wrapper'>
-            <div id='content-wrapper' class='d-flex flex-column'>
-              <div id='content'>
-                <div class='container-fluid' id='container-wrapper'>
-                  <div class='row'>
-                    <div class='col-lg-6'>
-                      <div class='card mb-4'>
-                        <div class='table-responsive'>
-                            <table class='table align-items-center table-flush'>
+        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
                                 <thead class='thead-light'>
                                     <tr>
                                         <th class='text-center'>Produto</th>
@@ -314,12 +241,7 @@ class RelatoriosController extends Core\Controller
                                     <th class='text-center'>Custo Total</th>
                                     <td class='text-center'>R$ " . number_format($total, 2, ",", ".") . "</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </body>
-        </html>";
+                            </tbody>" . PRINT_END;
 
         echo $relatorio;
     }
@@ -335,28 +257,7 @@ class RelatoriosController extends Core\Controller
 
         $relatorioLucratividade = $Venda->relatorioVendasPorCliente($periodoInicio, $periodoFim);
 
-        $relatorio = "<!DOCTYPE html>
-        <head>
-          <meta charset='utf-8'>
-          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-          <meta name='description' content='PlanoD'>
-          <meta name='author' content='Lucão'>
-          <style>
-            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
-            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
-          </style>
-        </head>
-        <body id='page-top'>
-          <div id='wrapper'>
-            <div id='content-wrapper' class='d-flex flex-column'>
-              <div id='content'>
-                <div class='container-fluid' id='container-wrapper'>
-                  <div class='row'>
-                    <div class='col-lg-6'>
-                      <div class='card mb-4'><div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
+        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
                             <thead class='thead-light'>
                                 <tr>
                                     <th colspan='3' class='text-center'>DE $start</th>
@@ -422,11 +323,7 @@ class RelatoriosController extends Core\Controller
                                     <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </body>
-        </html>";
+                        </table>" . PRINT_END;
 
         echo $relatorio;
     }
