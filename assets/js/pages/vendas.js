@@ -273,7 +273,7 @@ function updateCarrinho() {
 
   tbody.html("");
   if (
-    typeof localStorage.carrinho != "undefined" &&
+    typeof localStorage.carrinho != "undefined" ||
     Object.keys(JSON.parse(localStorage.carrinho)).length == 0
   ) {
     tbody.append("<tr><th colspan=4 class='text-center'>Nada ainda!</th></tr>");
