@@ -58,14 +58,15 @@
                 </div>
                 <div class="card-body">
                     <form onsubmit="return false;" id="relCustoEstoque">
-                        <div class="form-group">
-                            <label for="rangeRelCustoEstoque">Período</label>
-                            <div class="input-daterange input-group">
-                                <input type="text" class="input-sm form-control" name="start" required="true" />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">até</span>
-                                </div>
-                                <input type="text" class="input-sm form-control" name="end" required="true" />
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="orderRelCustoEstoque">Ordenação</label>
+                            <div class="col-sm-9">
+                                <select class="form-control mb-3" name="orderRelCustoEstoque" id="orderRelCustoEstoque" required="true">
+                                    <option value="produto">Produto</option>
+                                    <option value="quantidade">Estoque</option>
+                                    <option value="preco_de_compra">Custo</option>
+                                    <option value="quantidade * preco_de_compra">Custo Total</option>
+                                </select>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Emitir</button>

@@ -63,4 +63,13 @@ class Estoque extends Core\Model
             ->where("produto", $produto)
             ->execute();
     }
+
+    public function relatorioCustoEstoque($order)
+    {
+        return $this->select("produto", "descricao", "quantidade", "preco_de_compra", "quantidade * preco_de_compra AS preco_de_compra_total")
+            ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "produto", "identificador")
+            ->orderBy($order, "ASC")
+            ->execute();
+    }
 }
