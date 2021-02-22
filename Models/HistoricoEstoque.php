@@ -50,4 +50,15 @@ class HistoricoEstoque extends Core\Model
             ->where("produto", $produto)
             ->execute();
     }
+
+    public function relatorioMovEstoque($periodoInicio, $periodoFim)
+    {
+        return $this->select("produto", "descricao", "tipo_de_movimentacao", "SUM(quantidade_movimentada) AS quantidade_movimentada", "CAST(momento AS DATE) AS dia")
+            ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "produto", "identificador")
+            ->whereBetween("CAST(momento AS DATE)", $periodoInicio, $periodoFim)
+            ->groupBy("produto", "tipo_de_movimentacao", "CAST(momento AS DATE)")
+            ->orderBy("CAST(momento AS DATE)", "ASC")
+            ->execute();
+    }
 }

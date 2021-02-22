@@ -5,7 +5,7 @@ namespace Controllers;
 use Core;
 use DateTime;
 use Models\Venda;
-use Core\PDFPrinter;
+use Models\HistoricoEstoque;
 
 class RelatoriosController extends Core\Controller
 {
@@ -158,6 +158,92 @@ class RelatoriosController extends Core\Controller
         </html>";
 
         echo $relatorio;
-        //file_put_contents(BASE_PATH . "views/relatorio.html", $relatorio);
+    }
+
+    public function relatorioMovEstoque()
+    {
+        extract($_REQUEST);
+
+        $periodoInicio = DateTime::createFromFormat("d/m/Y", $start)->format("Ymd");
+        $periodoFim = DateTime::createFromFormat("d/m/Y", $end)->format("Ymd");
+
+        $HistoricoEstoque = new HistoricoEstoque();
+
+        $relatorioMovEstoque = $HistoricoEstoque->relatorioMovEstoque($periodoInicio, $periodoFim);
+
+        $relatorio = "<!DOCTYPE html>
+        <head>
+          <meta charset='utf-8'>
+          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+          <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+          <meta name='description' content='PlanoD'>
+          <meta name='author' content='Lucão'>
+          <style>
+            " . file_get_contents(BASE_PATH . 'assets/vendor/fontawesome-free/css/all.min.css') . "
+            " . file_get_contents(BASE_PATH . 'assets/vendor/bootstrap/css/bootstrap.min.css') . "
+            " . file_get_contents(BASE_PATH . 'assets/css/ruang-admin.min.css') . "
+          </style>
+        </head>
+        <body id='page-top'>
+          <div id='wrapper'>
+            <div id='content-wrapper' class='d-flex flex-column'>
+              <div id='content'>
+                <div class='container-fluid' id='container-wrapper'>
+                  <div class='row'>
+                    <div class='col-lg-6'>
+                      <div class='card mb-4'>
+                        <div class='table-responsive'>
+                            <table class='table align-items-center table-flush'>
+                                <thead class='thead-light'>
+                                    <tr>
+                                        <th class='text-center'>DE</th>
+                                        <th class='text-center'>$start</th>
+                                        <th class='text-center'>ATÉ</th>
+                                        <th class='text-center'>$end</th>
+                                    </tr>
+                                    <tr>
+                                        <th class='text-center'>Produto</th>
+                                        <th class='text-center'>Tipo de Movimentação</th>
+                                        <th class='text-center'>Quantidade</th>
+                                        <th class='text-center'>Dia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>";
+        foreach ($relatorioMovEstoque as $line) {
+            extract($line);
+
+            $totais[$tipo_de_movimentacao] = ($totais[$tipo_de_movimentacao] ?? 0) + $quantidade_movimentada;
+
+            $relatorio .= "<tr>
+                <td>$produto - $descricao</td>
+                <td>$tipo_de_movimentacao</td>
+                <td>$quantidade_movimentada</td>
+                <td>" . DateTime::createFromFormat("Y-m-d", $dia)->format("d/m/Y") . "</td>
+            </tr>";
+        }
+
+        $relatorio .= "</tbody>
+                            </table>
+                        </div>
+                    <hr>
+                    <div class='table-responsive'>
+                        <table class='table align-items-center table-flush'>
+                            <thead class='thead-light'>";
+
+        foreach ($totais as $tipo => $quantidade) {
+            $relatorio .= "<tr>
+                <th class='text-center'>'$tipo' totais</th>
+                <td class='text-center'>$quantidade</td>
+            </tr>";
+        }
+
+        $relatorio .= "</tbody>
+                        </table>
+                    </div>
+                </div>
+            </body>
+        </html>";
+
+        echo $relatorio;
     }
 }
