@@ -7,7 +7,10 @@ const valor_total = $("#valor_total");
 const valor_desconto = $("#valor_desconto");
 const valor_final = $("#valor_final");
 const newVendaBtn = $("#newVendaBtn");
+const toggleVendas = $("#toggleVendas");
 const returnBtn = $("#returnBtn");
+
+var exibeVendasAntigas = false;
 
 const columnsVendas = {
   columns: [
@@ -46,13 +49,17 @@ const columnsVendas = {
     {
       data: null,
       render: (data, type, row) => {
-        return `<center>
-          <button type="button" class="btn btn-outline-success mb-1 btnReceber" valor_final="${
-            data.valor_final
-          }" valor_pago="${data.valor_pago ?? 0}" identificador=${
-          data.identificador
-        }>Receber pagamento</button>
-        </center>`;
+        if (data.valor_pago >= data.valor_final) {
+          return `<center><b>Pagamento finalizado</b></center>`;
+        } else {
+          return `<center>
+            <button type="button" class="btn btn-outline-success mb-1 btnReceber" valor_final="${
+              data.valor_final
+            }" valor_pago="${data.valor_pago ?? 0}" identificador=${
+            data.identificador
+          }>Receber pagamento</button>
+          </center>`;
+        }
       },
     },
   ],
@@ -129,6 +136,21 @@ $(document).ready(() => {
     rowVenda.show();
   });
 
+  toggleVendas.click(() => {
+    exibeVendasAntigas = !exibeVendasAntigas;
+    toggleVendas.text(
+      `${exibeVendasAntigas ? "Ocultar Vendas Pagas" : "Exibir Vendas Pagas"}`
+    );
+
+    $("#dataTableVendas").DataTable().destroy();
+    dataTableVendas = new DataTableClass(
+      "#dataTableVendas",
+      "Venda/selectAll",
+      { exibeVendasAntigas }
+    );
+    dataTableVendas.loadTable(columnsVendas);
+  });
+
   returnBtn.click(() => {
     window.location.reload();
   });
@@ -142,7 +164,9 @@ $(document).ready(() => {
   );
   dataTableProdutos.loadTable(columnsProdutos);
 
-  dataTableVendas = new DataTableClass("#dataTableVendas", "Venda/selectAll");
+  dataTableVendas = new DataTableClass("#dataTableVendas", "Venda/selectAll", {
+    exibeVendasAntigas,
+  });
   dataTableVendas.loadTable(columnsVendas);
 
   $(document).on("click", ".btnVender", (event) => {

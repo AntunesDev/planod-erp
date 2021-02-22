@@ -11,6 +11,7 @@
             <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-end justify-content-between">
                     <button type="button" class="btn btn-primary mb-1" id="newVendaBtn">Nova Venda</button>
+                    <button type="button" class="btn btn-warning mb-1" id="toggleVendas">Exibir Vendas Pagas</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive p-3">

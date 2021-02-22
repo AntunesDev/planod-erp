@@ -69,6 +69,8 @@ class VendaController extends Core\Controller
     public function selectAll()
     {
         extract($_REQUEST);
+        extract($postData);
+        $exibeVendasAntigas = $exibeVendasAntigas === "true";
 
         $columns = array(
             0 => 'identificador',
@@ -90,26 +92,25 @@ class VendaController extends Core\Controller
         $selectAll = $Venda->selectAll();
         $paginatedSearch = $Venda->paginatedSearch($search, $order, $dir, $start, $length);
 
-        if ($paginatedSearch != false) {
+        $totalData = count($selectAll);
+
+        if ($exibeVendasAntigas == false) {
             foreach ($paginatedSearch as $index => $produto) {
                 if ($produto["valor_pago"] < $produto["valor_final"])
                     continue;
                 else
                     $indexesToKill[] = $index;
             }
-        }
 
-        if (isset($indexesToKill)) {
-            foreach ($indexesToKill as $indexToKill) {
-                unset($paginatedSearch[$indexToKill]);
+            $totalData -= count($indexesToKill);
+
+            if (isset($indexesToKill)) {
+                foreach ($indexesToKill as $indexToKill) {
+                    unset($paginatedSearch[$indexToKill]);
+                }
+                $paginatedSearch = array_values($paginatedSearch);
             }
-            $paginatedSearch = array_values($paginatedSearch);
         }
-
-        if ($selectAll == false)
-            $totalData = 0;
-        else
-            $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
@@ -118,20 +119,14 @@ class VendaController extends Core\Controller
         }
 
         $data = array();
-        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
-            $paginatedSearch = [(array) $paginatedSearch];
-        }
-
-        if ($paginatedSearch != false) {
-            foreach ($paginatedSearch as $outer_key => $array) {
-                $nestedData = array();
-                foreach ($array as $inner_key => $value) {
-                    if (!(int) $inner_key) {
-                        $nestedData[$inner_key] = $value;
-                    }
+        foreach ($paginatedSearch as $outer_key => $array) {
+            $nestedData = array();
+            foreach ($array as $inner_key => $value) {
+                if (!(int) $inner_key) {
+                    $nestedData[$inner_key] = $value;
                 }
-                $data[] = $nestedData;
             }
+            $data[] = $nestedData;
         }
 
         $this->asJson([

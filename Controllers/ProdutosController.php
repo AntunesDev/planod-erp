@@ -213,18 +213,13 @@ class ProdutosController extends Core\Controller
         $Produtos = new Produtos();
         $selectAll = $Produtos->selectAllAtivosComEstoque();
         $paginatedSearch = $Produtos->paginatedSearchAtivosComEstoque($search, $order, $dir, $start, $length);
-        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
-            $paginatedSearch = [(array) $paginatedSearch];
-        }
 
-        if ($paginatedSearch != false) {
-            if (count($paginatedSearch) > 0) {
-                foreach ($paginatedSearch as $index => $produto) {
-                    if ($produto["estoque"] <= 0)
-                        $indexesToKill[] = $index;
-                    else
-                        continue;
-                }
+        if (count($paginatedSearch) > 0) {
+            foreach ($paginatedSearch as $index => $produto) {
+                if ($produto["estoque"] <= 0)
+                    $indexesToKill[] = $index;
+                else
+                    continue;
             }
         }
 
