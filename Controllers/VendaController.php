@@ -89,28 +89,10 @@ class VendaController extends Core\Controller
         $length = (int) $length;
 
         $Venda = new Venda();
-        $selectAll = $Venda->selectAll();
-        $paginatedSearch = $Venda->paginatedSearch($search, $order, $dir, $start, $length);
+        $selectAll = $Venda->selectAll($exibeVendasAntigas);
+        $paginatedSearch = $Venda->paginatedSearch($exibeVendasAntigas, $search, $order, $dir, $start, $length);
 
         $totalData = count($selectAll);
-
-        if ($exibeVendasAntigas == false) {
-            foreach ($paginatedSearch as $index => $produto) {
-                if ($produto["valor_pago"] < $produto["valor_final"])
-                    continue;
-                else
-                    $indexesToKill[] = $index;
-            }
-
-            $totalData -= count($indexesToKill);
-
-            if (isset($indexesToKill)) {
-                foreach ($indexesToKill as $indexToKill) {
-                    unset($paginatedSearch[$indexToKill]);
-                }
-                $paginatedSearch = array_values($paginatedSearch);
-            }
-        }
 
         if (empty($search)) {
             $totalFiltered = $totalData;

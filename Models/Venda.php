@@ -3,6 +3,7 @@
 namespace Models;
 
 use Core;
+use PDO;
 
 class Venda extends Core\Model
 {
@@ -22,22 +23,44 @@ class Venda extends Core\Model
             ->execute();
     }
 
-    public function selectAll()
+    public function selectAll($exibeVendasAntigas)
     {
-        return $this->select("identificador", "cliente", "data", "valor_total", "valor_desconto", "valor_final", "valor_pago")
-            ->from($this->table_name)
-            ->execute();
+        $query = "SELECT *
+        FROM $this->table_name
+        ";
+
+        if ($exibeVendasAntigas === false) {
+            $query .= "WHERE valor_final > IFNULL(valor_pago, 0);";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 
-    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearch($exibeVendasAntigas, $searchText, $orderColumn, $orderDir, $start, $rows)
     {
-        return $this->select("$this->table_name.identificador", "nome AS cliente", "data", "valor_total", "valor_desconto", "valor_final", "valor_pago")
-            ->from($this->table_name)
-            ->leftJoin($this->table_clientes, "$this->table_clientes.identificador", "cliente")
-            ->whereLike("nome", $searchText)
-            ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
-            ->execute();
+        $query = "SELECT $this->table_name.identificador, nome AS cliente, data, valor_total, valor_desconto, valor_final, IFNULL(valor_pago, 0) AS valor_pago
+        FROM $this->table_name
+        LEFT JOIN $this->table_clientes ON $this->table_clientes.identificador = cliente
+        WHERE nome LIKE :searchText
+        " . ($exibeVendasAntigas ? "" : "AND valor_final > IFNULL(valor_pago, 0)") . "
+        ORDER BY $orderColumn $orderDir
+        LIMIT $start, $rows;";
+
+        if (empty($searchText))
+            $searchText = '%';
+        else
+            $searchText = '%' . $searchText . '%';
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":searchText", $searchText);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 
     public function selectById($identificador)
