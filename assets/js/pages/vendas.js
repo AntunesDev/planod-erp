@@ -272,7 +272,10 @@ function updateCarrinho() {
   }
 
   tbody.html("");
-  if (Object.keys(JSON.parse(localStorage.carrinho)).length == 0) {
+  if (
+    typeof localStorage.carrinho != "undefined" &&
+    Object.keys(JSON.parse(localStorage.carrinho)).length == 0
+  ) {
     tbody.append("<tr><th colspan=4 class='text-center'>Nada ainda!</th></tr>");
   } else {
     Object.keys(JSON.parse(localStorage.carrinho)).forEach((identificador) => {
