@@ -116,7 +116,11 @@ const columnsProdutos = {
       data: null,
       render: (data, type, row) => {
         return `<center>
-          <button type="button" class="btn btn-outline-success mb-1 btnVender" identificador=${data.identificador} estoque=${data.estoque} preco=${data.preco} produto=${data.produto}><i class="fas fa-plus"></i></button>
+          <button type="button" class="btn btn-outline-success mb-1 btnVender" identificador=${
+            data.identificador
+          } estoque=${data.estoque} preco=${
+          data.preco
+        } produto='${data.produto.trim()}'><i class="fas fa-plus"></i></button>
         </center>`;
       },
     },
