@@ -27,7 +27,7 @@ class HomeController extends Core\Controller
     public function getIndexTotalizers()
     {
         $produtos = (new Produtos)->selectAll();
-        $vendas = (new Venda)->selectAll();
+        $vendas = (new Venda)->selectAll(true);
         $clientes = (new Clientes)->selectAll();
 
         $cobrancas = 0;
