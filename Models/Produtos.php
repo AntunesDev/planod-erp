@@ -85,8 +85,7 @@ class Produtos extends Core\Model
             $query .= "AND identificador NOT IN (" . implode(", ", $produtosNoCarrinho) . ")\n";
         }
 
-        $query .= "ORDER BY $orderColumn $orderDir
-        LIMIT $start, $rows";
+        $query .= "ORDER BY $orderColumn $orderDir";
 
         if (empty($searchText))
             $searchText = '%';

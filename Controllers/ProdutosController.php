@@ -214,6 +214,7 @@ class ProdutosController extends Core\Controller
             $totalFiltered = count($paginatedSearch);
         }
 
+        $paginatedSearch = array_slice($paginatedSearch, $start, $length);
         $data = array();
         if ($paginatedSearch != false) {
             foreach ($paginatedSearch as $outer_key => $array) {
