@@ -21,7 +21,8 @@
     },
     "files": [
       "static/helpers.php",
-      "static/config.php"
+      "static/config.php",
+      "static/pdf_template.php"
     ]
   }
 }
