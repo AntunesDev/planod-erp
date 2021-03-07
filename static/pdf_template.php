@@ -16,18 +16,15 @@ define('PRINT_START', "<!DOCTYPE html>
             font-family: \"TimesNewRoman\" !important;
         }
 
-        thead 
-        {
+        thead {
             display: table-header-group
         }
 
-        tfoot 
-        {
+        tfoot {
             display: table-row-group
         }
 
-        tr
-        {
+        tr {
             page-break-inside: avoid
         }
 

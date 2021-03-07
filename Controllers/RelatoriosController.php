@@ -44,8 +44,7 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                             <thead>
                                 <tr>
-                                    <th colspan='4'>DE: $start</th>
-                                    <th colspan='4'>ATÉ: $end</th>
+                                    <th colspan='8' style='text-center'>DE: $start - ATÉ: $end</th>
                                 </tr>
                                 <tr>
                                     <th colspan='2'></th>
@@ -148,8 +147,7 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                                 <thead>
                                     <tr>
-                                        <th colspan=2>DE: $start</th>
-                                        <th colspan=2>ATÉ: $end</th>
+                                        <th colspan='4' style='text-center'>DE: $start - ATÉ: $end</th>
                                     </tr>
                                     <tr>
                                         <th>Produto</th>
@@ -253,8 +251,7 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                             <thead>
                                 <tr>
-                                    <th colspan='3'>DE $start</th>
-                                    <th colspan='3'>ATÉ $end</th>
+                                    <th colspan='6' style='text-center'>DE $start - ATÉ $end</th>
                                 </tr>
                                 <tr>
                                     <th>Cliente</th>
