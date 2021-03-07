@@ -44,10 +44,8 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                             <thead>
                                 <tr>
-                                    <th colspan='2'>DE</th>
-                                    <th colspan='2'>$start</th>
-                                    <th colspan='2'>ATÉ</th>
-                                    <th colspan='4'>$end</th>
+                                    <th colspan='4'>DE: $start</th>
+                                    <th colspan='4'>ATÉ: $end</th>
                                 </tr>
                                 <tr>
                                     <th colspan='2'></th>
@@ -80,7 +78,7 @@ class RelatoriosController extends Core\Controller
             $quantidade_total_final += $quantidade_total;
 
             $relatorio .= "<tr>
-            <td>$produto - $descricao</td>
+            <td><small>$produto - $descricao</small></td>
             <td>$quantidade_total</td>
             <td>R$ " . number_format($valor_unitario, 2, ",", "") . "</td>
             <td>R$ " . number_format($preco_de_compra, 2, ",", "") . "</td>
@@ -100,7 +98,7 @@ class RelatoriosController extends Core\Controller
         $relatorio .= "</tbody>
                     </table>
                     <hr>
-                    <table>
+                    <table style='width:100%'>
                         <thead>
                             <tr>
                                 <th>Total de Vendas</th>
