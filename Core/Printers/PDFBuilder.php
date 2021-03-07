@@ -46,9 +46,9 @@ class PDFBuilder
             'footer-font-size' => $this->footer_font_size,
             'footer-font-name' => $this->footer_font_name,
             'footer-spacing' => $this->footer_spacing,
-            'title' => $title //,
-            //'encoding' => 'utf-8',
-            //'custom-header' => ['meta' => 'charset=utf-8']
+            'title' => $title,
+            'encoding' => 'utf-8',
+            'custom-header' => ['meta' => 'charset=utf-8']
         ]);
         $pdf->addPage($content);
 
