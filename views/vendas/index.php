@@ -124,4 +124,5 @@
 
 <?php include BASE_PATH . 'assets/inc/template_scripts.php'; ?>
 <script src="assets/js/static/datatables.js"></script>
+<script></script>
 <script src="assets/js/pages/vendas.js"></script>

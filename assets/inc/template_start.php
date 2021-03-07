@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="PlanoD">
   <meta name="author" content="Lucão">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
   <link href="assets/img/logo/planod-bolota.png" rel="icon">
 
   <title><?php echo $template['title'] ?></title>
