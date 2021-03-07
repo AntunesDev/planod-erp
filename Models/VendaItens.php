@@ -58,4 +58,11 @@ class VendaItens extends Core\Model
             ->where("produto", $produto)
             ->execute();
     }
+
+    public function deleteAll($venda)
+    {
+        return $this->deleteFrom($this->table_name)
+            ->where("venda", $venda)
+            ->execute();
+    }
 }

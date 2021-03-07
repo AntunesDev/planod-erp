@@ -155,8 +155,16 @@ class VendaController extends Core\Controller
     {
         extract($_REQUEST);
 
-        $Venda = new Venda();
-        $result = $Venda->delete($identificador);
-        $this->asJson(["success" => true, "results" => $result]);
+        $VendaItens = new VendaItens();
+        $result = $VendaItens->deleteAll($identificador);
+
+        if ($result == true) {
+            $Venda = new Venda();
+            $result = $Venda->delete($identificador);
+        } else {
+            $this->asJson(["success" => false]);
+        }
+
+        $this->asJson(["success" => true]);
     }
 }

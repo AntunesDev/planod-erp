@@ -49,17 +49,17 @@ const columnsVendas = {
     {
       data: null,
       render: (data, type, row) => {
+        let btnPayment;
         if (Number(data.valor_pago) >= Number(data.valor_final)) {
-          return `<center><b>Pagamento finalizado</b></center>`;
+          btnPayment = `<b>Pagamento finalizado</b>`;
         } else {
-          return `<center>
-            <button type="button" class="btn btn-outline-success mb-1 btnReceber" valor_final="${
-              data.valor_final
-            }" valor_pago="${data.valor_pago ?? 0}" identificador=${
-            data.identificador
-          }>Receber pagamento</button>
-          </center>`;
+          btnPayment = `
+            <button type="button" class="btn btn-outline-success mb-1 btnReceber" valor_final="${data.valor_final
+            }" valor_pago="${data.valor_pago ?? 0}" identificador=${data.identificador
+            }>Receber pagamento</button>`;
         }
+
+        return `<center>${btnPayment}<br><button type="button" class="btn btn-outline-danger mb-1 btnDelete" identificador=${data.identificador}>Cancelar Venda</button></center>`;
       },
     },
   ],
@@ -102,6 +102,35 @@ $(document).on("click", ".btnReceber", (event) => {
   });
 });
 
+$(document).on("click", ".btnDelete", (event) => {
+  let identificador = $(event.currentTarget).attr("identificador");
+  Swal.fire({
+    title: "Atenção!",
+    focusConfirm: false,
+    text: "Você tem certeza que deseja cancelar e extornar a venda selecionada?",
+    showCloseButton: true,
+    showCancelButton: true,
+    focusConfirm: false,
+    confirmButtonText:
+      'Sim!',
+    cancelButtonText:
+      'Não',
+    icon: "warning"
+  }).then((result) => {
+    if (result.isConfirmed == true) {
+      let formData = new FormData();
+      formData.append("identificador", identificador);
+      axios.post("Venda/delete", formData).then(({ data }) => {
+        if (data.success == true) {
+          window.location.reload();
+        } else {
+          Swal.fire("Oops...", "Ocorreu um erro ao cancelar a venda.", "error");
+        }
+      })
+    }
+  })
+})
+
 const columnsProdutos = {
   columns: [
     { data: "produto" },
@@ -116,11 +145,9 @@ const columnsProdutos = {
       data: null,
       render: (data, type, row) => {
         return `<center>
-          <button type="button" class="btn btn-outline-success mb-1 btnVender" identificador=${
-            data.identificador
-          } estoque=${data.estoque} preco=${
-          data.preco
-        } produto='${data.produto.trim()}'><i class="fas fa-plus"></i></button>
+          <button type="button" class="btn btn-outline-success mb-1 btnVender" identificador=${data.identificador
+          } estoque=${data.estoque} preco=${data.preco
+          } produto='${data.produto.trim()}'><i class="fas fa-plus"></i></button>
         </center>`;
       },
     },
@@ -303,9 +330,8 @@ function updateCarrinho() {
           <tr>
             <td>${produto.produto}</td>
             <td>R$ ${Number(produto.preco).toFixed(2)}</td>
-            <td><input type="text" class="upspin" identificador="${identificador}" valor='${
-            produto.preco
-          }' name='quantidade${identificador}' required="true"></td>
+            <td><input type="text" class="upspin" identificador="${identificador}" valor='${produto.preco
+            }' name='quantidade${identificador}' required="true"></td>
             <td>R$ ${Number(produto.preco * produto.quantidade).toFixed(2)}</td>
           </tr>
           `);
