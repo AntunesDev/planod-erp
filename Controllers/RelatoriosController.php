@@ -41,28 +41,28 @@ class RelatoriosController extends Core\Controller
         $custo_total_final = 0;
         $quantidade_total_final = 0;
 
-        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
+        $relatorio = PRINT_START . "<table>
+                            <thead>
                                 <tr>
-                                    <th colspan='2' class='text-center'>DE</th>
-                                    <th colspan='2' class='text-center'>$start</th>
-                                    <th colspan='2' class='text-center'>ATÉ</th>
-                                    <th colspan='4' class='text-center'>$end</th>
+                                    <th colspan='2'>DE</th>
+                                    <th colspan='2'>$start</th>
+                                    <th colspan='2'>ATÉ</th>
+                                    <th colspan='4'>$end</th>
                                 </tr>
                                 <tr>
                                     <th colspan='2'></th>
-                                    <th colspan='2' class='text-center'>Unitário</th>
-                                    <th colspan='4' class='text-center'>Total</th>
+                                    <th colspan='2'>Unitário</th>
+                                    <th colspan='4'>Total</th>
                                 </tr>
                                 <tr>
-                                    <th class='text-center'>Produto</th>
-                                    <th class='text-center'>Vendas</th>
-                                    <th class='text-center'>R$ Venda</th>
-                                    <th class='text-center'>R$ Custo</th>
-                                    <th class='text-center'>R$ Venda</th>
-                                    <th class='text-center'>R$ Custo</th>
-                                    <th class='text-center'>% de Lucro</th>
-                                    <th class='text-center'>Lucro Bruto</th>
+                                    <th>Produto</th>
+                                    <th>Vendas</th>
+                                    <th>R$ Venda</th>
+                                    <th>R$ Custo</th>
+                                    <th>R$ Venda</th>
+                                    <th>R$ Custo</th>
+                                    <th>% de Lucro</th>
+                                    <th>Lucro Bruto</th>
                                 </tr>
                             </thead>
                             <tbody>";
@@ -98,42 +98,40 @@ class RelatoriosController extends Core\Controller
         $margem_lucro_total = ($lucro_total * 100) / $custo_total_final;
 
         $relatorio .= "</tbody>
-                        </table>
-                    </div>
+                    </table>
                     <hr>
-                    <div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
-                                <tr>
-                                    <th class='text-center'>Total de Vendas</th>
-                                    <td class='text-center'>R$ " . number_format($venda_total_final, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Total de Custo</th>
-                                    <td class='text-center'>R$ " . number_format($custo_total_final, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Total de Descontos</th>
-                                    <td class='text-center'>R$ " . number_format($totalDesconto, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Total Final</th>
-                                    <td class='text-center'>R$ " . number_format($venda_total_final_com_desconto, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>% de Lucro Final</th>
-                                    <td class='text-center'>" . number_format($margem_lucro_total, 2, ".", "") . " %</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Lucro Bruto Total</th>
-                                    <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Dízimo</th>
-                                    <td class='text-center'>R$ " . number_format($dizimo, 2, ",", "") . "</td>
-                                </tr>
-                            </tbody>
-                        </table>" . PRINT_END;
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Total de Vendas</th>
+                                <td>R$ " . number_format($venda_total_final, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>Total de Custo</th>
+                                <td>R$ " . number_format($custo_total_final, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>Total de Descontos</th>
+                                <td>R$ " . number_format($totalDesconto, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>Total Final</th>
+                                <td>R$ " . number_format($venda_total_final_com_desconto, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>% de Lucro Final</th>
+                                <td>" . number_format($margem_lucro_total, 2, ".", "") . " %</td>
+                            </tr>
+                            <tr>
+                                <th>Lucro Bruto Total</th>
+                                <td>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>Dízimo</th>
+                                <td>R$ " . number_format($dizimo, 2, ",", "") . "</td>
+                            </tr>
+                        </thead>
+                    </table>" . PRINT_END;
 
         (new PDFBuilder)->print("Relatório de Lucratividade", $relatorio, "PlanoD - ERP");
     }
@@ -149,19 +147,19 @@ class RelatoriosController extends Core\Controller
 
         $relatorioMovEstoque = $HistoricoEstoque->relatorioMovEstoque($periodoInicio, $periodoFim);
 
-        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
-                                <thead class='thead-light'>
+        $relatorio = PRINT_START . "<table>
+                                <thead>
                                     <tr>
-                                        <th class='text-center'>DE</th>
-                                        <th class='text-center'>$start</th>
-                                        <th class='text-center'>ATÉ</th>
-                                        <th class='text-center'>$end</th>
+                                        <th>DE</th>
+                                        <th>$start</th>
+                                        <th>ATÉ</th>
+                                        <th>$end</th>
                                     </tr>
                                     <tr>
-                                        <th class='text-center'>Produto</th>
-                                        <th class='text-center'>Tipo de Movimentação</th>
-                                        <th class='text-center'>Quantidade</th>
-                                        <th class='text-center'>Dia</th>
+                                        <th>Produto</th>
+                                        <th>Tipo de Movimentação</th>
+                                        <th>Quantidade</th>
+                                        <th>Dia</th>
                                     </tr>
                                 </thead>
                                 <tbody>";
@@ -179,22 +177,20 @@ class RelatoriosController extends Core\Controller
         }
 
         $relatorio .= "</tbody>
-                            </table>
-                        </div>
+                    </table>
                     <hr>
-                    <div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>";
+                    <table>
+                        <thead>";
 
         foreach ($totais as $tipo => $quantidade) {
             $relatorio .= "<tr>
-                <th class='text-center'>'$tipo' totais</th>
-                <td class='text-center'>$quantidade</td>
+                <th>'$tipo' totais</th>
+                <td>$quantidade</td>
             </tr>";
         }
 
-        $relatorio .= "</tbody>
-                        </table>" . PRINT_END;
+        $relatorio .= "</thead>
+                    </table>" . PRINT_END;
 
         (new PDFBuilder)->print("Movimentação de Estoque", $relatorio, "PlanoD - ERP");
     }
@@ -207,13 +203,13 @@ class RelatoriosController extends Core\Controller
 
         $relatorioCustoEstoque = $Estoque->relatorioCustoEstoque($orderRelCustoEstoque);
 
-        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
-                                <thead class='thead-light'>
+        $relatorio = PRINT_START . "<table>
+                                <thead>
                                     <tr>
-                                        <th class='text-center'>Produto</th>
-                                        <th class='text-center'>Estoque</th>
-                                        <th class='text-center'>Custo (un.)</th>
-                                        <th class='text-center'>Custo Total</th>
+                                        <th>Produto</th>
+                                        <th>Estoque</th>
+                                        <th>Custo (un.)</th>
+                                        <th>Custo Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>";
@@ -233,17 +229,16 @@ class RelatoriosController extends Core\Controller
         }
 
         $relatorio .= "</tbody>
-                            </table>
-                        </div>
+                        </table>
                     <hr>
-                    <div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
-                                <tr>
-                                    <th class='text-center'>Custo Total</th>
-                                    <td class='text-center'>R$ " . number_format($total, 2, ",", ".") . "</td>
-                                </tr>
-                            </tbody>" . PRINT_END;
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Custo Total</th>
+                                <td>R$ " . number_format($total, 2, ",", ".") . "</td>
+                            </tr>
+                        </thead>
+                    </table>" . PRINT_END;
 
         (new PDFBuilder)->print("Custo de Estoque", $relatorio, "PlanoD - ERP");
     }
@@ -259,19 +254,19 @@ class RelatoriosController extends Core\Controller
 
         $relatorioLucratividade = $Venda->relatorioVendasPorCliente($periodoInicio, $periodoFim);
 
-        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
+        $relatorio = PRINT_START . "<table>
+                            <thead>
                                 <tr>
-                                    <th colspan='3' class='text-center'>DE $start</th>
-                                    <th colspan='3' class='text-center'>ATÉ $end</th>
+                                    <th colspan='3'>DE $start</th>
+                                    <th colspan='3'>ATÉ $end</th>
                                 </tr>
                                 <tr>
-                                    <th class='text-center'>Cliente</th>
-                                    <th class='text-center'>Data</th>
-                                    <th class='text-center'>R$ Venda</th>
-                                    <th class='text-center'>R$ Custo</th>
-                                    <th class='text-center'>% de Lucro</th>
-                                    <th class='text-center'>Lucro Bruto</th>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>R$ Venda</th>
+                                    <th>R$ Custo</th>
+                                    <th>% de Lucro</th>
+                                    <th>Lucro Bruto</th>
                                 </tr>
                             </thead>
                             <tbody>";
@@ -302,30 +297,28 @@ class RelatoriosController extends Core\Controller
         $margem_lucro_total = ($lucro_total * 100) / $custo_total_final;
 
         $relatorio .= "</tbody>
-                        </table>
-                    </div>
+                    </table>
                     <hr>
-                    <div class='table-responsive'>
-                        <table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
-                                <tr>
-                                    <th class='text-center'>Total de Vendas</th>
-                                    <td class='text-center'>R$ " . number_format($venda_total_final, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Total de Custo</th>
-                                    <td class='text-center'>R$ " . number_format($custo_total_final, 2, ",", "") . "</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>% de Lucro Final</th>
-                                    <td class='text-center'>" . number_format($margem_lucro_total, 2, ".", "") . " %</td>
-                                </tr>
-                                <tr>
-                                    <th class='text-center'>Lucro Bruto Total</th>
-                                    <td class='text-center'>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
-                                </tr>
-                            </tbody>
-                        </table>" . PRINT_END;
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Total de Vendas</th>
+                                <td>R$ " . number_format($venda_total_final, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>Total de Custo</th>
+                                <td>R$ " . number_format($custo_total_final, 2, ",", "") . "</td>
+                            </tr>
+                            <tr>
+                                <th>% de Lucro Final</th>
+                                <td>" . number_format($margem_lucro_total, 2, ".", "") . " %</td>
+                            </tr>
+                            <tr>
+                                <th>Lucro Bruto Total</th>
+                                <td>R$ " . number_format($lucro_total, 2, ",", "") . "</td>
+                            </tr>
+                        </thead>
+                    </table>" . PRINT_END;
 
         (new PDFBuilder)->print("Vendas por Cliente", $relatorio, "PlanoD - ERP");
     }
@@ -336,13 +329,13 @@ class RelatoriosController extends Core\Controller
 
         $catalogoSemImagens = $Produtos->getCatalogoSemImagens();
 
-        $relatorio = PRINT_START . "<table class='table align-items-center table-flush'>
-                            <thead class='thead-light'>
+        $relatorio = PRINT_START . "<table>
+                            <thead>
                                 <tr>
-                                    <th colspan='2' class='text-center'>Tabela válida para o dia " . (new DateTime())->format("d/m/Y") . " - Os preços podem mudar sem aviso prévio</th>
+                                    <th colspan='2'>Tabela válida para o dia " . (new DateTime())->format("d/m/Y") . " - Os preços podem mudar sem aviso prévio</th>
                                 </tr>
                                 <tr>
-                                    <th colspan='2' class='text-center'>Produtos com * podem não possuir estoque no momento</th>
+                                    <th colspan='2'>Produtos com * podem não possuir estoque no momento</th>
                                 </tr>
                             </thead>
                             <tbody>";
