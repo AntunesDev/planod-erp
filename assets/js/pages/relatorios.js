@@ -14,73 +14,39 @@ $(document).ready(() => {
 
   relLucratividade.submit(() => {
     let formData = new FormData(relLucratividade[0]);
-    axios
-      .post("Relatorios/relatorioLucratividade", formData)
-      .then(({ data }) => {
-        if (data.success == false) {
-          Swal.fire(
-            "Oops...",
-            "Não existem informações o suficiente para emitir um relatório!",
-            "error"
-          );
-        } else {
-          printHTML(data);
-        }
-      });
+    printReport("Relatorios/relatorioLucratividade", formData);
   });
 
   relMovEstoque.submit(() => {
     let formData = new FormData(relMovEstoque[0]);
-    axios.post("Relatorios/relatorioMovEstoque", formData).then(({ data }) => {
-      if (data.success == false) {
-        Swal.fire(
-          "Oops...",
-          "Não existem informações o suficiente para emitir um relatório!",
-          "error"
-        );
-      } else {
-        printHTML(data);
-      }
-    });
+    printReport("Relatorios/relatorioMovEstoque", formData)
   });
 
   relCustoEstoque.submit(() => {
     let formData = new FormData(relCustoEstoque[0]);
-    axios
-      .post("Relatorios/relatorioCustoEstoque", formData)
-      .then(({ data }) => {
-        if (data.success == false) {
-          Swal.fire(
-            "Oops...",
-            "Não existem informações o suficiente para emitir um relatório!",
-            "error"
-          );
-        } else {
-          printHTML(data);
-        }
-      });
+    printReport("Relatorios/relatorioCustoEstoque", formData)
   });
 
   relVendasCliente.submit(() => {
     let formData = new FormData(relVendasCliente[0]);
-    axios
-      .post("Relatorios/relatorioVendasPorCliente", formData)
-      .then(({ data }) => {
-        if (data.success == false) {
-          Swal.fire(
-            "Oops...",
-            "Não existem informações o suficiente para emitir um relatório!",
-            "error"
-          );
-        } else {
-          printHTML(data);
-        }
-      });
+    printReport("Relatorios/relatorioVendasPorCliente", formData)
   });
 });
 
-function printHTML(htmlToPrint) {
-  window.document.write(htmlToPrint);
-  window.print();
-  location.reload();
-}
+const printReport = (method, formData) => {
+  axios.post(method, formData, { responseType: "arraybuffer" }).then(response => {
+    if (response.data.byteLength != 0) {
+      let blob = new Blob([response.data], { type: "application/pdf" });
+      let link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.target = "_blank";
+      link.click();
+    } else {
+      Swal.fire(
+        "Oops...",
+        "Não há informações suficientes para emitir o relatório selecionado.",
+        "error"
+      );
+    }
+  });
+};

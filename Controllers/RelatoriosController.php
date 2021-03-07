@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core;
+use Core\Printers\PDFBuilder;
 use DateTime;
 use Models\Venda;
 use Models\HistoricoEstoque;
@@ -134,7 +135,7 @@ class RelatoriosController extends Core\Controller
                             </tbody>
                         </table>" . PRINT_END;
 
-        echo $relatorio;
+        (new PDFBuilder)->print("Relatório de Lucratividade", $relatorio, "PlanoD - ERP");
     }
 
     public function relatorioMovEstoque()
@@ -195,7 +196,7 @@ class RelatoriosController extends Core\Controller
         $relatorio .= "</tbody>
                         </table>" . PRINT_END;
 
-        echo $relatorio;
+        (new PDFBuilder)->print("Movimentação de Estoque", $relatorio, "PlanoD - ERP");
     }
 
     public function relatorioCustoEstoque()
@@ -244,7 +245,7 @@ class RelatoriosController extends Core\Controller
                                 </tr>
                             </tbody>" . PRINT_END;
 
-        echo $relatorio;
+        (new PDFBuilder)->print("Custo de Estoque", $relatorio, "PlanoD - ERP");
     }
 
     public function relatorioVendasPorCliente()
@@ -326,7 +327,7 @@ class RelatoriosController extends Core\Controller
                             </tbody>
                         </table>" . PRINT_END;
 
-        echo $relatorio;
+        (new PDFBuilder)->print("Vendas por Cliente", $relatorio, "PlanoD - ERP");
     }
 
     public function catalogoSemImagens()
@@ -358,6 +359,6 @@ class RelatoriosController extends Core\Controller
         $relatorio .= "</tbody>
                         </table>" . PRINT_END;
 
-        echo $relatorio;
+        (new PDFBuilder)->printWithoutFooter("Catálogo (Sem Imagens)", $relatorio, "PlanoD - ERP");
     }
 }

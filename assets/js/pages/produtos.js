@@ -84,17 +84,19 @@ $(document).ready(() => {
   });
 
   printTabelaBtn.click(() => {
-    axios.post("Relatorios/catalogoSemImagens").then(({ data }) => {
-      if (data.success == false) {
+    axios.post("Relatorios/catalogoSemImagens", null, { responseType: "arraybuffer" }).then(response => {
+      if (response.data.byteLength != 0) {
+        let blob = new Blob([response.data], { type: "application/pdf" });
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.target = "_blank";
+        link.click();
+      } else {
         Swal.fire(
           "Oops...",
-          "Não existem informações o suficiente para emitir um relatório!",
+          "Não há informações suficientes para emitir o relatório selecionado.",
           "error"
         );
-      } else {
-        window.document.write(data);
-        window.print();
-        location.reload();
       }
     });
   });
