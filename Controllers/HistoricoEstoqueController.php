@@ -71,12 +71,9 @@ class HistoricoEstoqueController extends Core\Controller
 
         $HistoricoEstoque = new HistoricoEstoque();
         $selectAll = $HistoricoEstoque->selectAll();
-        $paginatedSearch = $HistoricoEstoque->paginatedSearch($search, $order, $dir, $start, $length);
+        $paginatedSearch = $HistoricoEstoque->paginatedSearch($search, $order, $dir);
 
-        if ($selectAll == false)
-            $totalData = 0;
-        else
-            $totalData = count($selectAll);
+        $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
@@ -84,21 +81,16 @@ class HistoricoEstoqueController extends Core\Controller
             $totalFiltered = count($paginatedSearch);
         }
 
+        $paginatedSearch = array_slice($paginatedSearch, $start, $length);
         $data = array();
-        if ($paginatedSearch != false && is_array($paginatedSearch) == false) {
-            $paginatedSearch = [(array) $paginatedSearch];
-        }
-
-        if ($paginatedSearch != false) {
-            foreach ($paginatedSearch as $outer_key => $array) {
-                $nestedData = array();
-                foreach ($array as $inner_key => $value) {
-                    if (!(int) $inner_key) {
-                        $nestedData[$inner_key] = $value;
-                    }
+        foreach ($paginatedSearch as $outer_key => $array) {
+            $nestedData = array();
+            foreach ($array as $inner_key => $value) {
+                if (!(int) $inner_key) {
+                    $nestedData[$inner_key] = $value;
                 }
-                $data[] = $nestedData;
             }
+            $data[] = $nestedData;
         }
 
         $this->asJson([

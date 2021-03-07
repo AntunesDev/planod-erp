@@ -30,7 +30,7 @@ class HistoricoEstoque extends Core\Model
             ->execute();
     }
 
-    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearch($searchText, $orderColumn, $orderDir)
     {
         return $this->select("descricao AS produto", "tipo_de_movimentacao", "quantidade_movimentada", "quantidade_antes", "quantidade_depois", "momento")
             ->from($this->table_name)
@@ -40,7 +40,6 @@ class HistoricoEstoque extends Core\Model
             ->orWhereLike("descricao", $searchText)
             ->orWhereLike("tipo_de_movimentacao", $searchText)
             ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
             ->execute();
     }
 

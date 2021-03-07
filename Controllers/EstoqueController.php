@@ -48,12 +48,9 @@ class EstoqueController extends Core\Controller
 
         $Estoque = new Estoque();
         $selectAll = $Estoque->selectAll();
-        $paginatedSearch = $Estoque->paginatedSearch($search, $order, $dir, $start, $length);
+        $paginatedSearch = $Estoque->paginatedSearch($search, $order, $dir);
 
-        if ($selectAll == false)
-            $totalData = 0;
-        else
-            $totalData = count($selectAll);
+        $totalData = count($selectAll);
 
         if (empty($search)) {
             $totalFiltered = $totalData;
@@ -61,6 +58,7 @@ class EstoqueController extends Core\Controller
             $totalFiltered = count($paginatedSearch);
         }
 
+        $paginatedSearch = array_slice($paginatedSearch, $start, $length);
         $data = array();
         foreach ($paginatedSearch as $outer_key => $array) {
             $nestedData = array();

@@ -40,15 +40,14 @@ class Venda extends Core\Model
         return $rows;
     }
 
-    public function paginatedSearch($exibeVendasAntigas, $searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearch($exibeVendasAntigas, $searchText, $orderColumn, $orderDir)
     {
         $query = "SELECT $this->table_name.identificador, nome AS cliente, data, valor_total, valor_desconto, valor_final, IFNULL(valor_pago, 0) AS valor_pago
         FROM $this->table_name
         LEFT JOIN $this->table_clientes ON $this->table_clientes.identificador = cliente
         WHERE nome LIKE :searchText
         " . ($exibeVendasAntigas ? "" : "AND valor_final > IFNULL(valor_pago, 0)") . "
-        ORDER BY $orderColumn $orderDir
-        LIMIT $start, $rows;";
+        ORDER BY $orderColumn $orderDir;";
 
         if (empty($searchText))
             $searchText = '%';

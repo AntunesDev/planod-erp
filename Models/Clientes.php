@@ -40,7 +40,6 @@ class Clientes extends Core\Model
             ->orWhereLike("identificador", $searchText)
             ->orWhereLike("nome", $searchText)
             ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
             ->execute();
     }
 

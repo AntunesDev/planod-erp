@@ -26,7 +26,7 @@ class Estoque extends Core\Model
             ->execute();
     }
 
-    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearch($searchText, $orderColumn, $orderDir)
     {
         return $this->select("identificador", "descricao AS produto", "quantidade", "ultima_movimentacao")
             ->from($this->table_name)
@@ -36,7 +36,6 @@ class Estoque extends Core\Model
             ->orWhereLike("descricao", $searchText)
             ->orWhereLike("ultima_movimentacao", $searchText)
             ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
             ->execute();
     }
 

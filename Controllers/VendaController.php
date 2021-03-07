@@ -89,7 +89,7 @@ class VendaController extends Core\Controller
 
         $Venda = new Venda();
         $selectAll = $Venda->selectAll($exibeVendasAntigas);
-        $paginatedSearch = $Venda->paginatedSearch($exibeVendasAntigas, $search, $order, $dir, $start, $length);
+        $paginatedSearch = $Venda->paginatedSearch($exibeVendasAntigas, $search, $order, $dir);
 
         $totalData = count($selectAll);
 
@@ -99,6 +99,7 @@ class VendaController extends Core\Controller
             $totalFiltered = count($paginatedSearch);
         }
 
+        $paginatedSearch = array_slice($paginatedSearch, $start, $length);
         $data = array();
         foreach ($paginatedSearch as $outer_key => $array) {
             $nestedData = array();

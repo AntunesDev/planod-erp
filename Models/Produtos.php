@@ -37,7 +37,7 @@ class Produtos extends Core\Model
             ->execute();
     }
 
-    public function paginatedSearch($searchText, $orderColumn, $orderDir, $start, $rows)
+    public function paginatedSearch($searchText, $orderColumn, $orderDir)
     {
         return $this->select("identificador", "descricao", "preco_de_venda", "preco_de_compra")
             ->from($this->table_name)
@@ -45,7 +45,6 @@ class Produtos extends Core\Model
             ->orWhereLike("descricao", $searchText)
             ->where("excluido", 0)
             ->orderBy($orderColumn, $orderDir)
-            ->limit($start, $rows)
             ->execute();
     }
 
