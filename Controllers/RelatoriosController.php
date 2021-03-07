@@ -148,10 +148,8 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                                 <thead>
                                     <tr>
-                                        <th>DE</th>
-                                        <th>$start</th>
-                                        <th>ATÉ</th>
-                                        <th>$end</th>
+                                        <th colspan=2>DE: $start</th>
+                                        <th colspan=2>ATÉ: $end</th>
                                     </tr>
                                     <tr>
                                         <th>Produto</th>
