@@ -79,11 +79,11 @@ class RelatoriosController extends Core\Controller
 
             $relatorio .= "<tr>
             <td><small>$produto - $descricao</small></td>
-            <td>$quantidade_total</td>
-            <td>R$ " . number_format($valor_unitario, 2, ",", "") . "</td>
-            <td>R$ " . number_format($preco_de_compra, 2, ",", "") . "</td>
-            <td>R$ " . number_format($venda_total_item, 2, ",", "") . "</td>
-            <td>R$ " . number_format($custo_total_item, 2, ",", "") . "</td>
+            <td><small>$quantidade_total</small></td>
+            <td><small>R$ " . number_format($valor_unitario, 2, ",", "") . "</small></td>
+            <td><small>R$ " . number_format($preco_de_compra, 2, ",", "") . "</small></td>
+            <td><small>R$ " . number_format($venda_total_item, 2, ",", "") . "</small></td>
+            <td><small>R$ " . number_format($custo_total_item, 2, ",", "") . "</small></td>
             <td>" . number_format($margem_lucro_item, 2, ".", "") . " %</td>
             <td>R$ " . number_format($lucro_item, 2, ",", "") . "</td>
             </tr>";
