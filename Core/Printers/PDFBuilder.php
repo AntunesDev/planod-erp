@@ -46,9 +46,11 @@ class PDFBuilder
             'footer-font-size' => $this->footer_font_size,
             'footer-font-name' => $this->footer_font_name,
             'footer-spacing' => $this->footer_spacing,
-            'title' => $title
+            'title' => $title //,
+            //'encoding' => 'utf-8',
+            //'custom-header' => ['meta' => 'charset=utf-8']
         ]);
-        $pdf->addPage(utf8_encode($content));
+        $pdf->addPage($content);
 
         if (!$pdf->send("$title.pdf")) {
             $error = $pdf->getError();
