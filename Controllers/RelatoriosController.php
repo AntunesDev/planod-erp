@@ -251,11 +251,10 @@ class RelatoriosController extends Core\Controller
         $relatorio = PRINT_START . "<table>
                             <thead>
                                 <tr>
-                                    <th colspan='6' style='text-center'>DE $start - ATÉ $end</th>
+                                    <th colspan='5' style='text-center'>DE $start - ATÉ $end</th>
                                 </tr>
                                 <tr>
                                     <th>Cliente</th>
-                                    <th>Data</th>
                                     <th>R$ Venda</th>
                                     <th>R$ Custo</th>
                                     <th>% de Lucro</th>
@@ -269,6 +268,15 @@ class RelatoriosController extends Core\Controller
 
         foreach ($relatorioLucratividade as $line) {
             extract($line);
+            $aux = $relatorioLucratividadeSomado[$nome] ?? [];
+            $aux["valor_pago"] = ($aux["valor_pago"] ?? 0) + $valor_pago;
+            $aux["custo_total"] = ($aux["custo_total"] ?? 0) + $custo_total;
+            $aux["nome"] = $nome;
+            $relatorioLucratividadeSomado[$nome] = $aux;
+        }
+
+        foreach ($relatorioLucratividadeSomado as $line) {
+            extract($line);
 
             $lucro_item = $valor_pago - $custo_total;
             $margem_lucro_item = ($lucro_item * 100) / $custo_total;
@@ -278,7 +286,6 @@ class RelatoriosController extends Core\Controller
 
             $relatorio .= "<tr>
             <td>$nome</td>
-            <td>" . DateTime::createFromFormat("Y-m-d", $data)->format("d/m/Y") . "</td>
             <td>R$ " . number_format($valor_pago, 2, ",", "") . "</td>
             <td>R$ " . number_format($custo_total, 2, ",", "") . "</td>
             <td>" . number_format($margem_lucro_item, 2, ".", "") . " %</td>
