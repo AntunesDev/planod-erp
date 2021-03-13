@@ -7,6 +7,7 @@ use Core;
 class VendaItens extends Core\Model
 {
     private $table_name = "venda_itens";
+    private $table_produtos = "produtos";
 
     public function create($venda, $produto, $quantidade, $valor_unitario)
     {
@@ -27,16 +28,18 @@ class VendaItens extends Core\Model
 
     public function selectAllByProduto($produto)
     {
-        return $this->select("venda", "produto", "quantidade", "valor_unitario")
+        return $this->select("venda", "produto", "descricao", "quantidade", "valor_unitario")
             ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
             ->where("produto", $produto)
             ->execute();
     }
 
     public function selectAllByVenda($venda)
     {
-        return $this->select("venda", "produto", "quantidade", "valor_unitario")
+        return $this->select("venda", "produto", "descricao", "quantidade", "valor_unitario")
             ->from($this->table_name)
+            ->leftJoin($this->table_produtos, "identificador", "produto")
             ->where("venda", $venda)
             ->execute();
     }

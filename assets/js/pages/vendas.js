@@ -59,7 +59,7 @@ const columnsVendas = {
             }>Receber pagamento</button>`;
         }
 
-        return `<center>${btnPayment}<br><button type="button" class="btn btn-outline-danger mb-1 btnDelete" identificador=${data.identificador}>Cancelar Venda</button></center>`;
+        return `<center>${btnPayment}<br><button type="button" class="btn btn-outline-danger mb-1 btnDelete" identificador=${data.identificador}>Cancelar Venda</button><br><button type="button" class="btn btn-outline-info mb-1 btnView" identificador=${data.identificador}><i class="fas fa-eye"></i></button></center>`;
       },
     },
   ],
@@ -130,6 +130,40 @@ $(document).on("click", ".btnDelete", (event) => {
     }
   })
 })
+
+$(document).on("click", ".btnView", (event) => {
+  let identificador = $(event.currentTarget).attr("identificador");
+
+  let formData = new FormData();
+  formData.append("venda", identificador);
+  axios.post("VendaItens/selectAllByVenda", formData).then(({ data }) => {
+    let html = `<table class="table align-items-center table-flush table-hover">
+      <thead class="thead-light">
+        <th class="text-center">Produto</th>
+        <th class="text-center">Quantidade</th>
+        <th class="text-center">Valor Un.</th>
+        <th class="text-center">Valor Total</th>
+      </thead>
+      <tbody>`;
+
+    data.results.forEach((element) => {
+      html += `<tr>
+      <td>${element.produto} - ${element.descricao}</td>
+      <td>${element.quantidade}</td>
+      <td>R$ ${Number(element.valor_unitario).toFixed(2)}</td>
+      <td>R$ ${Number(element.quantidade * element.valor_unitario).toFixed(2)}</td>
+      </tr>`
+    })
+
+    html += "</tbody></table>";
+
+    Swal.fire({
+      title: `Itens da venda ${identificador}`,
+      html,
+      width: "75%"
+    });
+  })
+});
 
 const columnsProdutos = {
   columns: [
